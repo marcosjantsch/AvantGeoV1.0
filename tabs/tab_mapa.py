@@ -26,6 +26,11 @@ def _prepare_gdf_for_map(gdf):
                 lambda x: str(x) if isinstance(x, pd.Timestamp) else x
             )
 
+    if gdf_map.crs is None:
+        gdf_map = gdf_map.set_crs("EPSG:4326")
+    elif str(gdf_map.crs).upper() != "EPSG:4326":
+        gdf_map = gdf_map.to_crs("EPSG:4326")
+
     return gdf_map
 
 
@@ -49,7 +54,11 @@ def _fit_map_to_gdf(m, gdf):
 
     minx, miny, maxx, maxy = gdf.total_bounds
     if all(v is not None for v in [minx, miny, maxx, maxy]):
-        m.fit_bounds([[miny, minx], [maxy, maxx]])
+        if minx == maxx and miny == maxy:
+            m.location = [miny, minx]
+            m.zoom_start = 15
+        else:
+            m.fit_bounds([[miny, minx], [maxy, maxx]])
 
 
 def _build_tooltip(gdf_map):
@@ -95,7 +104,12 @@ def render_tab_mapa(
     try:
         gdf_map = _prepare_gdf_for_map(gdf_ref)
 
-        centroid = gdf_map.geometry.unary_union.centroid
+        geom_union = gdf_map.geometry.unary_union
+        if geom_union is None or geom_union.is_empty:
+            st.warning("Geometria vazia para exibição no mapa.")
+            return
+
+        centroid = geom_union.centroid
         lat, lon = centroid.y, centroid.x
 
         m = folium.Map(
@@ -115,37 +129,40 @@ def render_tab_mapa(
                 None,
             )
 
-        if selected_spec:
-            image_id = selected_spec.get("id")
-            asset_id = selected_spec.get("asset_id")
-            collection_id = selected_spec.get("collection_id")
-            sat = selected_spec.get("satellite")
-            date_str = selected_spec.get("date")
+        if selected_spec and roi_geojson:
+            try:
+                image_id = selected_spec.get("id")
+                asset_id = selected_spec.get("asset_id")
+                collection_id = selected_spec.get("collection_id")
+                sat = selected_spec.get("satellite")
+                date_str = selected_spec.get("date")
 
-            ee_img = build_display_image(
-                image_id=image_id,
-                satellite=sat,
-                roi_geojson=roi_geojson,
-                asset_id=asset_id,
-                collection_id=collection_id,
-                product_name=selected_product_name,
-            )
+                ee_img = build_display_image(
+                    image_id=image_id,
+                    satellite=sat,
+                    roi_geojson=roi_geojson,
+                    asset_id=asset_id,
+                    collection_id=collection_id,
+                    product_name=selected_product_name,
+                )
 
-            product_label = selected_product_name or (
-                "Imagem Sentinel RGB" if sat == "Sentinel-2" else "RGB Landsat"
-            )
+                product_label = selected_product_name or (
+                    "Imagem Sentinel RGB" if sat == "Sentinel-2" else "RGB Landsat"
+                )
 
-            vis = get_product_vis_params(sat, product_label)
-            layer_name = f"{sat} | {date_str} | {product_label}"
+                vis = get_product_vis_params(sat, product_label)
+                layer_name = f"{sat} | {date_str} | {product_label}"
 
-            _add_ee_layer(
-                map_obj=m,
-                ee_image=ee_img,
-                vis_params=vis,
-                name=layer_name,
-                shown=True,
-                opacity=1.0,
-            )
+                _add_ee_layer(
+                    map_obj=m,
+                    ee_image=ee_img,
+                    vis_params=vis,
+                    name=layer_name,
+                    shown=True,
+                    opacity=1.0,
+                )
+            except Exception as e:
+                st.warning(f"Camada da imagem não pôde ser exibida: {e}")
 
         folium.GeoJson(
             gdf_map,
@@ -163,28 +180,36 @@ def render_tab_mapa(
         if roi_geojson:
             try:
                 roi_shape = shape(roi_geojson)
-                gdf_buffer = gpd.GeoDataFrame(
-                    {"name": ["buffer"]},
-                    geometry=[roi_shape],
-                    crs="EPSG:4326",
-                )
+                if not roi_shape.is_empty:
+                    gdf_buffer = gpd.GeoDataFrame(
+                        {"name": ["buffer"]},
+                        geometry=[roi_shape],
+                        crs="EPSG:4326",
+                    )
 
-                folium.GeoJson(
-                    gdf_buffer,
-                    name=f"Buffer / ROI ({buffer_m} m)",
-                    style_function=lambda x: {
-                        "color": "#0000FF",
-                        "weight": 2,
-                        "fillOpacity": 0.03,
-                        "dashArray": "5, 5",
-                    },
-                ).add_to(m)
+                    folium.GeoJson(
+                        gdf_buffer,
+                        name=f"Buffer / ROI ({buffer_m} m)",
+                        style_function=lambda x: {
+                            "color": "#0000FF",
+                            "weight": 2,
+                            "fillOpacity": 0.03,
+                            "dashArray": "5, 5",
+                        },
+                    ).add_to(m)
             except Exception:
                 pass
 
         _fit_map_to_gdf(m, gdf_map)
         folium.LayerControl(collapsed=False).add_to(m)
-        st_folium(m, width=None, height=760)
+
+        st_folium(
+            m,
+            width=None,
+            height=760,
+            key="mapa_principal_fixo",
+            returned_objects=[],
+        )
 
     except Exception as e:
         st.error(f"Erro ao gerar mapa: {e}")
