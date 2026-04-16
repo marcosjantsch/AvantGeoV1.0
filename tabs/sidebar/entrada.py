@@ -40,6 +40,9 @@ def dms_to_decimal(graus, minutos, segundos, hemisferio=None):
 
 
 def parse_coordinate_payload(coord_system, values):
+    def _fail(msg):
+        raise ValueError(msg)
+
     if coord_system == "Graus, minutos e segundos (DMS)":
         lat = dms_to_decimal(
             values.get("lat_graus"),
@@ -53,50 +56,52 @@ def parse_coordinate_payload(coord_system, values):
             values.get("lon_segundos"),
             values.get("lon_hemisferio"),
         )
-        return {
-            "coord_system": coord_system,
-            "latitude": lat,
-            "longitude": lon,
-            "utm_easting": None,
-            "utm_northing": None,
-            "utm_zone": None,
-            "utm_hemisphere": None,
-        }
 
-    if coord_system == "Graus decimais (DD)":
+        if lat is None or lon is None:
+            _fail("Preencha corretamente os campos DMS.")
+
+    elif coord_system == "Graus decimais (DD)":
         lat = _to_float(values.get("latitude_dd"))
         lon = _to_float(values.get("longitude_dd"))
-        return {
-            "coord_system": coord_system,
-            "latitude": lat,
-            "longitude": lon,
-            "utm_easting": None,
-            "utm_northing": None,
-            "utm_zone": None,
-            "utm_hemisphere": None,
-        }
 
-    if coord_system == "UTM":
+        if lat is None or lon is None:
+            _fail("Latitude/Longitude inválidas.")
+
+    elif coord_system == "UTM":
+        easting = _to_float(values.get("utm_easting"))
+        northing = _to_float(values.get("utm_northing"))
+        zone = values.get("utm_zone")
+        hemisphere = values.get("utm_hemisphere")
+
+        if None in [easting, northing] or not zone or not hemisphere:
+            _fail("Coordenadas UTM inválidas.")
+
         return {
             "coord_system": coord_system,
             "latitude": None,
             "longitude": None,
-            "utm_easting": _to_float(values.get("utm_easting")),
-            "utm_northing": _to_float(values.get("utm_northing")),
-            "utm_zone": values.get("utm_zone"),
-            "utm_hemisphere": values.get("utm_hemisphere"),
+            "utm_easting": easting,
+            "utm_northing": northing,
+            "utm_zone": zone,
+            "utm_hemisphere": hemisphere,
         }
+
+    else:
+        _fail("Sistema de coordenadas inválido.")
+
+    # valida faixa geográfica
+    if not (-90 <= lat <= 90 and -180 <= lon <= 180):
+        _fail("Coordenadas fora do intervalo válido.")
 
     return {
         "coord_system": coord_system,
-        "latitude": None,
-        "longitude": None,
+        "latitude": lat,
+        "longitude": lon,
         "utm_easting": None,
         "utm_northing": None,
         "utm_zone": None,
         "utm_hemisphere": None,
     }
-
 
 def render_sidebar_entrada(gdf_full):
     st.markdown(
