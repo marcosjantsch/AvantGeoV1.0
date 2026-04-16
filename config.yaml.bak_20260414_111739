@@ -1,0 +1,34 @@
+cookie:
+  expiry_days: 120
+  key: $2b$12$N7I9kz7CGdH5Gr6xYQ47xeu083YEkp1EUHvJt/3k3PgKEgLdXiuli
+  name: streamlit_auth_cookie
+credentials:
+  usernames:
+    marcos:
+      email: marcos.jantsch@valorflorestal.com.br
+      name: Marcos
+      password: $2b$12$cR4lZfCkgiwZXCPFx2EdF.74AJxYIziF.BYUrPkLmoTscNBSiS5OS
+      role: admin
+    avant:
+      name: avant
+      email: marcos.jantsch@valorflorestal.com.br
+      role: admin
+      password: $2b$12$yEa.a00RD3509MxACjRZoOqnN.2XHZzcjLfkkXZTcoGeT/yrjlldy
+    marcosj:
+      name: marcosj
+      email: marcos.jantsch@gmail.com
+      role: user
+      password: $2b$12$fk6in2KCELms6eHEhS7GpuEGrOUmBVwBpkxx5ZjeGlRMF3P8cVOCy
+    valor:
+      name: valor
+      email: marcos.jantsch@valorflorestal.com.br
+      role: admin
+      password: $2b$12$Y3ASSU.QMhamV9HE7zLGNeQz.3eOOQKNJopaEi9AIz5lBzPy0h2vy
+    valorms:
+      name: valorms
+      email: marcos.jantsch@valorflorestal.com.br
+      role: admin
+      password: $2b$12$77rS0DllJPJ7HqpadCv4heq4Ve8FSz79j.AreJLifxpoD.ud1l56i
+preauthorized:
+  emails:
+  - marcos.jantsch@gmail.com

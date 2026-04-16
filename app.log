@@ -1,0 +1,527 @@
+
+2026-04-14 10:56:05,582 - INFO - Carregando shapefile: C:\02\Geo.shp
+2026-04-14 10:56:17,316 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 10:56:17,339 - INFO - Ano 2026: arquivo lido como CSV (encoding=utf-8, separador=';') com 1217 linhas.
+2026-04-14 10:56:36,386 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 10:56:40,759 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 10:56:40,821 - INFO - Ano 2025: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 10:56:43,259 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 10:56:46,256 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 10:56:49,529 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 10:56:50,140 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 11:29:28,317 - INFO - Carregando shapefile: C:\02\Geo.shp
+2026-04-14 11:31:48,650 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 11:31:48,674 - INFO - Ano 2026: arquivo lido como CSV (encoding=utf-8, separador=';') com 1217 linhas.
+2026-04-14 11:31:55,538 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 11:31:56,756 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 11:32:09,077 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 11:32:09,776 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 11:32:48,804 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 11:32:49,495 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 11:33:57,360 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 11:38:30,182 - INFO - Carregando shapefile: C:\02\Geo.shp
+2026-04-14 11:40:24,920 - INFO - Carregando shapefile: C:\02\Geo.shp
+2026-04-14 11:40:48,248 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 11:40:48,267 - INFO - Ano 2026: arquivo lido como CSV (encoding=utf-8, separador=';') com 1217 linhas.
+2026-04-14 11:40:56,742 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 13:21:07,404 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 13:21:23,316 - INFO - Carregando shapefile: C:\02\Geo.shp
+2026-04-14 13:22:00,720 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 13:22:00,754 - INFO - Ano 2026: arquivo lido como CSV (encoding=utf-8, separador=';') com 1217 linhas.
+2026-04-14 13:27:10,747 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 13:27:13,397 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 13:29:43,027 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 13:29:49,339 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 13:30:00,133 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 13:30:48,802 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 13:30:49,705 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 13:35:57,598 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 13:35:57,671 - INFO - Ano 2025: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 13:36:00,433 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 13:36:01,040 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 13:36:16,370 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 13:54:29,772 - INFO - Carregando shapefile: C:\02\Geo.shp
+2026-04-14 13:55:17,097 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 13:55:17,126 - INFO - Ano 2026: arquivo lido como CSV (encoding=utf-8, separador=';') com 1217 linhas.
+2026-04-14 13:55:55,032 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 13:55:55,100 - INFO - Ano 2025: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 13:55:57,301 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 13:55:58,083 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 13:59:50,554 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:04:58,828 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:04:58,900 - INFO - Ano 2010: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 14:04:58,968 - INFO - Ano 2011: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 14:04:59,050 - INFO - Ano 2012: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 14:04:59,123 - INFO - Ano 2013: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 14:04:59,216 - INFO - Ano 2014: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 14:04:59,307 - INFO - Ano 2015: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 14:04:59,800 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:04:59,889 - INFO - Ano 2016: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 14:04:59,963 - INFO - Ano 2017: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 14:05:00,037 - INFO - Ano 2018: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 14:05:00,110 - INFO - Ano 2019: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 14:05:00,184 - INFO - Ano 2020: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 14:05:00,255 - INFO - Ano 2021: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 14:05:00,328 - INFO - Ano 2022: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 14:05:00,409 - INFO - Ano 2023: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 14:05:00,503 - INFO - Ano 2024: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 14:06:15,626 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:07:15,839 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:07:54,056 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:08:51,207 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:22:27,878 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:23:00,598 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:23:02,650 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:23:03,571 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:23:17,918 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:23:53,220 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:23:53,902 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:24:07,377 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:24:08,505 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:24:29,371 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:24:34,509 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:24:35,350 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:25:46,130 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:25:57,084 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:26:04,691 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:26:06,477 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:26:10,657 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:26:14,099 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:26:16,360 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:26:19,757 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:26:25,122 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:26:37,938 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:36:08,854 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:38:40,231 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:43:21,607 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:44:16,890 - INFO - Carregando shapefile: C:\02\Geo.shp
+2026-04-14 14:44:33,799 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:44:33,837 - INFO - Ano 2026: arquivo lido como CSV (encoding=utf-8, separador=';') com 1217 linhas.
+2026-04-14 14:44:38,042 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:44:41,834 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:44:50,758 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:44:58,956 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:45:02,347 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:45:18,683 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:45:20,557 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:45:21,246 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:45:23,174 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:45:35,754 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:45:38,523 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:45:41,326 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:45:47,488 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:45:48,466 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:45:49,110 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:45:50,166 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:45:50,911 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:45:52,278 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:45:56,258 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:45:58,172 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:45:58,869 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:46:01,703 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:46:03,539 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:46:04,183 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:46:05,633 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:46:09,047 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:46:10,140 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:46:11,883 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:46:12,558 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:46:18,311 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:46:29,243 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:46:30,356 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:46:33,688 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:46:34,660 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:46:35,783 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:46:36,589 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:46:37,556 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:46:38,652 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:51:30,597 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:51:34,925 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:51:35,622 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:51:43,597 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:51:44,179 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:51:50,944 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:51:53,556 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:51:56,459 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:51:57,143 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:51:57,746 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:52:05,744 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:52:08,719 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:52:13,881 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:52:15,359 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:52:16,018 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:52:20,605 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:52:21,728 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:52:23,489 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:52:25,147 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:52:26,911 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:52:41,131 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:52:48,846 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:52:50,352 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:52:51,828 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:53:33,831 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:53:35,635 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:53:37,120 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:53:55,765 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:53:56,675 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:53:57,943 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:53:58,632 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:54:00,249 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:54:02,827 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:54:04,804 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:54:06,204 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:54:42,542 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:54:44,256 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:54:44,885 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:54:58,464 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:54:59,636 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:55:04,503 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:55:07,594 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:55:12,500 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:55:13,592 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:55:14,823 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:55:58,641 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:56:02,673 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:56:08,396 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:56:30,951 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:56:32,376 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:56:37,013 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:56:38,094 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 14:56:42,924 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:01:56,363 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:01:57,445 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:01:58,123 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:01:59,028 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:02:00,224 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:02:01,512 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:02:05,156 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:09:19,166 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:09:29,088 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:09:29,714 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:09:49,069 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:09:50,346 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:09:57,657 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:09:58,789 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:09:59,581 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:10:00,666 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:10:01,267 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:10:04,679 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:10:06,353 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:10:18,578 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:10:19,295 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:14:09,076 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:14:09,824 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:14:11,140 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:14:14,333 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:14:17,696 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:14:28,237 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:14:29,162 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:14:40,142 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:14:41,613 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:14:53,045 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:16:03,161 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:16:09,996 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:16:10,652 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:16:28,584 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:16:45,307 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:16:46,209 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:16:48,421 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:16:49,281 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:17:09,602 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:17:10,238 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:17:12,059 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:17:13,259 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:17:17,933 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:17:19,094 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:17:20,856 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:17:21,694 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:17:22,217 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:17:23,354 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:17:24,436 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:19:27,806 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:19:27,893 - INFO - Ano 2025: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 15:19:29,973 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:19:30,602 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:21:17,248 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:21:21,924 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:21:22,602 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:21:33,564 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:21:36,438 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:21:38,354 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:21:39,036 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:21:42,061 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:21:43,568 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:21:48,536 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:21:49,646 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:21:51,487 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:21:52,200 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:21:55,561 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:21:59,346 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:22:01,247 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:22:01,988 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:22:02,819 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:22:04,616 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:22:06,490 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:22:07,745 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:30:04,905 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:30:29,994 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:30:30,660 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:30:35,317 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:30:39,356 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:30:42,988 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:30:44,397 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:30:45,825 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:30:46,456 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:30:47,864 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:30:52,227 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:30:54,378 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:30:55,799 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:30:57,241 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:30:57,889 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:31:05,090 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:31:12,755 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:31:15,690 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:31:21,172 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:31:22,546 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:31:24,286 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:31:24,926 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:31:41,705 - INFO - Carregando shapefile: C:\02\Geo.shp
+2026-04-14 15:31:57,677 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:31:57,710 - INFO - Ano 2026: arquivo lido como CSV (encoding=utf-8, separador=';') com 1217 linhas.
+2026-04-14 15:32:17,525 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:32:18,242 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:32:20,245 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:32:22,147 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:32:23,437 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:32:24,870 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:32:25,533 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:33:44,776 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:33:46,097 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:33:47,588 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:33:48,256 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:33:49,317 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:33:50,245 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:38:26,972 - INFO - Carregando shapefile: C:\02\Geo.shp
+2026-04-14 15:39:00,495 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:39:00,524 - INFO - Ano 2026: arquivo lido como CSV (encoding=utf-8, separador=';') com 1217 linhas.
+2026-04-14 15:39:48,095 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:39:50,570 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:39:53,178 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:39:56,580 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:40:40,784 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:40:45,238 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:40:47,113 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:45:28,837 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:45:32,670 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:45:33,393 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:45:37,066 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:45:41,471 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:45:42,362 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:45:47,175 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:45:48,648 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:45:51,001 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:45:51,712 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:45:54,313 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:45:56,739 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:45:58,519 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:46:00,100 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:46:01,313 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:46:04,467 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:46:05,884 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:46:08,339 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:46:09,055 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:46:12,434 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:46:13,944 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:46:16,351 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:46:17,734 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:46:33,149 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:46:33,876 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:46:37,604 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:46:38,904 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:46:42,592 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:46:57,732 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:46:58,515 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:47:07,634 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:47:08,956 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:47:22,687 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:47:23,280 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:47:25,029 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:47:26,350 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:47:30,423 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:47:31,045 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:47:34,737 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:47:37,068 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:47:42,495 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:47:43,888 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:47:45,129 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:47:45,995 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:47:47,534 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:47:48,438 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:47:49,287 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:47:53,160 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:48:00,703 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:48:02,036 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:48:03,470 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:48:04,118 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:48:05,684 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:48:06,400 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:48:07,069 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:48:07,778 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:48:08,789 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:48:13,385 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:48:14,780 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:48:16,236 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:48:16,914 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:48:19,485 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:48:20,293 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:48:21,516 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:48:22,523 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:48:25,983 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:53:35,761 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:53:40,554 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:53:42,209 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:53:45,080 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:53:48,125 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:53:53,743 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:53:55,032 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:53:57,342 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:53:58,005 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:54:02,418 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:54:03,805 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:54:05,259 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:54:09,301 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:54:10,623 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:54:12,119 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:54:12,759 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:54:16,841 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:54:17,673 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:54:20,061 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:54:22,617 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:54:24,069 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:54:27,121 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:54:28,483 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:54:30,777 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:54:31,512 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:54:33,123 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:54:35,767 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:54:39,019 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:54:40,512 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:54:42,696 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:54:44,047 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:54:58,013 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:54:58,704 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:55:05,293 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:55:06,304 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:55:07,548 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:55:11,235 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:55:12,587 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:55:15,920 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:55:16,625 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:55:17,199 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 15:59:35,806 - INFO - Carregando shapefile: C:\02\Geo.shp
+2026-04-14 16:00:07,131 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:00:07,171 - INFO - Ano 2026: arquivo lido como CSV (encoding=utf-8, separador=';') com 1217 linhas.
+2026-04-14 16:00:20,263 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:00:20,934 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:00:26,387 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:00:27,401 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:00:29,892 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:00:36,513 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:00:38,380 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:00:39,757 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:00:40,947 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:00:51,119 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:00:51,986 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:00:55,237 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:00:56,810 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:00:58,002 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:01:00,382 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:01:01,018 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:01:02,694 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:01:03,538 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:01:04,346 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:01:08,830 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:01:10,101 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:01:12,259 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:01:12,917 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:01:14,163 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:01:14,856 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:01:16,066 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:01:16,716 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:01:17,205 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:01:20,431 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:01:23,051 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:01:24,237 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:01:37,532 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:01:38,228 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:02:22,269 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:02:23,453 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:02:24,802 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:02:25,550 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:07:32,517 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:07:35,970 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:07:36,505 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:07:39,952 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:07:41,449 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:07:43,464 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:07:45,804 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:07:47,344 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:07:49,058 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:07:50,195 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:07:52,368 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:07:53,164 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:07:55,308 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:07:56,233 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:07:57,503 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:07:59,351 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:11:10,447 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:11:13,705 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:11:28,277 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:11:56,480 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:12:48,780 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:13:39,330 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:14:35,340 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:14:42,305 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:14:45,728 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:14:50,339 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:14:51,554 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:14:52,160 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:14:57,969 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:14:59,272 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:15:01,570 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:15:02,203 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:15:11,038 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:15:11,800 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:15:12,651 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:15:15,194 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:15:17,776 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:15:19,283 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:15:28,790 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:15:32,325 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:15:33,027 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:15:35,748 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:15:39,344 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:15:40,031 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:15:41,562 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:15:41,628 - INFO - Ano 2014: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 16:15:41,705 - INFO - Ano 2015: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 16:15:41,794 - INFO - Ano 2016: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 16:15:41,879 - INFO - Ano 2017: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 16:15:41,966 - INFO - Ano 2018: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 16:15:42,053 - INFO - Ano 2019: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 16:15:42,138 - INFO - Ano 2020: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 16:15:42,219 - INFO - Ano 2021: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 16:15:42,297 - INFO - Ano 2022: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 16:15:42,390 - INFO - Ano 2023: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 16:15:42,476 - INFO - Ano 2024: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 16:15:42,554 - INFO - Ano 2025: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 16:15:48,478 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:15:51,524 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:15:56,345 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:15:56,407 - INFO - Ano 2010: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 16:16:02,076 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:16:02,148 - INFO - Ano 2011: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 16:16:02,220 - INFO - Ano 2012: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 16:16:02,298 - INFO - Ano 2013: arquivo lido como CSV (encoding=utf-8, separador=';') com 4896 linhas.
+2026-04-14 16:16:06,484 - INFO - URLs de CSV carregadas de config_urls.py.
+2026-04-14 16:17:19,343 - INFO - URLs de CSV carregadas de config_urls.py.
