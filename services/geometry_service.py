@@ -2,8 +2,13 @@
 import json
 import geopandas as gpd
 from pyproj import Transformer
-from shapely.geometry import Point, mapping, shape
+from shapely.geometry import Point, mapping
 from shapely.ops import unary_union
+
+try:
+    from shapely.validation import make_valid
+except Exception:
+    make_valid = None
 
 
 def filter_gdf(gdf: gpd.GeoDataFrame, empresa: str = None, fazenda: str = None):
@@ -73,6 +78,37 @@ def _normalize_gdf_4326(gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     return gdf_work
 
 
+def _fix_geometry(geom):
+    if geom is None or geom.is_empty:
+        raise ValueError("Geometria vazia.")
+
+    try:
+        if make_valid is not None:
+            geom = make_valid(geom)
+    except Exception:
+        pass
+
+    if geom is None or geom.is_empty:
+        try:
+            geom = geom.buffer(0)
+        except Exception:
+            pass
+
+    if geom is None or geom.is_empty:
+        raise ValueError("Geometria inválida após correção topológica.")
+
+    if geom.geom_type == "GeometryCollection":
+        parts = [g for g in geom.geoms if not g.is_empty]
+        if not parts:
+            raise ValueError("GeometryCollection vazia após correção.")
+        geom = unary_union(parts)
+
+    if geom is None or geom.is_empty:
+        raise ValueError("Geometria inválida após unificação.")
+
+    return geom
+
+
 def apply_buffer_in_meters(gdf: gpd.GeoDataFrame, buffer_m: float):
     gdf_work = _normalize_gdf_4326(gdf)
 
@@ -98,54 +134,43 @@ def apply_buffer_in_meters(gdf: gpd.GeoDataFrame, buffer_m: float):
     return gdf_proj.to_crs("EPSG:4326")
 
 
-def _clean_geometry_for_roi(geom):
+def _ensure_polygonal_roi(gdf_work: gpd.GeoDataFrame, buffer_m: float):
+    geom = unary_union(gdf_work.geometry.tolist())
+
     if geom is None or geom.is_empty:
-        raise ValueError("Geometria vazia para geração de ROI.")
+        raise ValueError("Não foi possível unificar as geometrias.")
 
-    try:
-        geom = geom.buffer(0)
-    except Exception:
-        pass
+    geom_type = geom.geom_type
 
-    if geom.is_empty:
-        raise ValueError("Geometria inválida após correção topológica.")
+    # Se for ponto/linha, precisa virar área primeiro
+    if geom_type in ["Point", "MultiPoint", "LineString", "MultiLineString"]:
+        buffer_value = float(buffer_m) if buffer_m and float(buffer_m) > 0 else 200.0
+        gdf_tmp = gpd.GeoDataFrame({"id": [1]}, geometry=[geom], crs="EPSG:4326")
+        gdf_tmp = apply_buffer_in_meters(gdf_tmp, buffer_value)
+        geom = unary_union(gdf_tmp.geometry.tolist())
 
-    if geom.geom_type == "GeometryCollection":
-        polys = [g for g in geom.geoms if g.geom_type in ["Polygon", "MultiPolygon"]]
-        if polys:
-            geom = unary_union(polys)
-        else:
-            non_empty = [g for g in geom.geoms if not g.is_empty]
-            if not non_empty:
-                raise ValueError("GeometryCollection sem geometrias utilizáveis.")
-            geom = unary_union(non_empty)
+    # Se já for polígono e houver buffer solicitado, aplica depois
+    elif buffer_m and float(buffer_m) > 0:
+        gdf_tmp = gpd.GeoDataFrame({"id": [1]}, geometry=[geom], crs="EPSG:4326")
+        gdf_tmp = apply_buffer_in_meters(gdf_tmp, float(buffer_m))
+        geom = unary_union(gdf_tmp.geometry.tolist())
 
-    if geom.geom_type in ["Point", "MultiPoint", "LineString", "MultiLineString"]:
-        raise ValueError(
-            "A ROI resultou em geometria linear/pontual. Aumente o buffer para gerar área."
-        )
+    geom = _fix_geometry(geom)
 
     if geom.geom_type not in ["Polygon", "MultiPolygon"]:
-        raise ValueError(f"Tipo geométrico não suportado para ROI: {geom.geom_type}")
+        raise ValueError(
+            f"ROI final inválido. Tipo obtido: {geom.geom_type}. "
+            "Aumente o buffer ou revise a geometria de entrada."
+        )
 
     return geom
 
 
 def gdf_to_roi_geojson(gdf: gpd.GeoDataFrame, buffer_m: float = 0):
     gdf_work = _normalize_gdf_4326(gdf)
-
-    geom = unary_union(gdf_work.geometry.tolist())
-    geom = _clean_geometry_for_roi(geom)
-
-    if buffer_m and float(buffer_m) > 0:
-        gdf_tmp = gpd.GeoDataFrame({"id": [1]}, geometry=[geom], crs="EPSG:4326")
-        gdf_tmp = apply_buffer_in_meters(gdf_tmp, float(buffer_m))
-        geom = unary_union(gdf_tmp.geometry.tolist())
-        geom = _clean_geometry_for_roi(geom)
+    geom = _ensure_polygonal_roi(gdf_work, buffer_m)
 
     geojson_geom = mapping(geom)
-
-    # força serialização limpa para listas nativas
     geojson_geom = json.loads(json.dumps(geojson_geom))
 
     if "type" not in geojson_geom or "coordinates" not in geojson_geom:
@@ -153,7 +178,7 @@ def gdf_to_roi_geojson(gdf: gpd.GeoDataFrame, buffer_m: float = 0):
 
     if geojson_geom["type"] not in ["Polygon", "MultiPolygon"]:
         raise ValueError(
-            f"ROI final inválido para consulta de imagem: {geojson_geom['type']}"
+            f"ROI final inválido para consulta: {geojson_geom['type']}"
         )
 
     return geojson_geom
