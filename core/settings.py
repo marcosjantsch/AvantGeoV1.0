@@ -12,8 +12,10 @@ ASSET_FAZENDAS = "projects/avantv1-475717/assets/GFP/Geo_Limites_GFP_Setembro_20
 COL_EMPRESA = "EMPRESA"
 COL_FAZENDA = "FAZENDA"
 
+from pathlib import Path
+
 BASE_DIR = Path(__file__).resolve().parent.parent
-LOGO_PATH = BASE_DIR / "assets" / "logo.png"
+LOGO_PATH = BASE_DIR / "assets" / "Logo.png"
 
 GEO_PATH = str(BASE_DIR / "data" / "Geo.shp")
 
