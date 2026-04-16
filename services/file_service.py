@@ -4,6 +4,23 @@ import tempfile
 import zipfile
 
 import geopandas as gpd
+import fiona
+
+
+def _enable_kml_drivers():
+    """
+    Habilita drivers KML/KMZ no Fiona quando disponíveis.
+    Isso é importante no Cloud Run / Code Room.
+    """
+    try:
+        fiona.drvsupport.supported_drivers["KML"] = "rw"
+    except Exception:
+        pass
+
+    try:
+        fiona.drvsupport.supported_drivers["LIBKML"] = "rw"
+    except Exception:
+        pass
 
 
 def load_shapefile_full(file_path: str):
@@ -30,9 +47,11 @@ def read_kml_or_kmz_to_gdf(uploaded_file):
     if uploaded_file is None:
         return None
 
+    _enable_kml_drivers()
+
     suffix = Path(uploaded_file.name).suffix.lower()
 
-    with tempfile.TemporaryDirectory() as tmpdir:
+    with tempfile.TemporaryDirectory(dir="/tmp") as tmpdir:
         tmpdir = Path(tmpdir)
 
         if suffix == ".kml":
@@ -48,16 +67,28 @@ def read_kml_or_kmz_to_gdf(uploaded_file):
                 if not kml_names:
                     raise ValueError("O arquivo KMZ não contém KML interno.")
 
+                # usa o primeiro KML encontrado
                 kml_data = zf.read(kml_names[0])
                 kml_path = tmpdir / "doc.kml"
                 kml_path.write_bytes(kml_data)
         else:
             raise ValueError("Formato inválido. Envie KML ou KMZ.")
 
-        gdf = gpd.read_file(kml_path)
+        # tenta primeiro com driver KML explícito
+        try:
+            gdf = gpd.read_file(kml_path, driver="KML")
+        except Exception:
+            # fallback sem driver explícito
+            gdf = gpd.read_file(kml_path)
 
         if gdf is None or gdf.empty:
             raise ValueError("Não foi possível ler a geometria do arquivo enviado.")
+
+        gdf = gdf[gdf.geometry.notna()].copy()
+        gdf = gdf[~gdf.geometry.is_empty].copy()
+
+        if gdf.empty:
+            raise ValueError("O arquivo enviado não possui geometrias válidas.")
 
         if gdf.crs is None:
             gdf = gdf.set_crs("EPSG:4326")
