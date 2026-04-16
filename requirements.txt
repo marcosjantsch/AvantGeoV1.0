@@ -12,3 +12,4 @@ google-auth-oauthlib
 google-auth-httplib2
 numpy
 requests
+streamlit-authenticator>=0.2.3
