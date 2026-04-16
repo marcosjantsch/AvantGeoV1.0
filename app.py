@@ -256,7 +256,8 @@ def main():
     tab1, tab2, tab3 = st.tabs(["🗺️ Mapa", "ℹ️ Info", "🛰️ Dados Satélite"])
 
     with tab1:
-        if st.session_state.get("aplicar"):
+    if st.session_state.get("aplicar"):
+        try:
             filtro_shape = st.session_state.get("filtro_aplicado", {})
             query_gdf = st.session_state.get("query_gdf")
             roi_geojson = st.session_state.get("roi_geojson")
@@ -272,18 +273,24 @@ def main():
                     filtro_shape.get("selected_fazenda"),
                 )
 
-            render_tab_mapa(
-                gdf_full=gdf_full,
-                gdf_filtered=gdf_filtered,
-                filtro=filtro_shape,
-                query_gdf=query_gdf,
-                roi_geojson=roi_geojson,
-                available_images=available_images,
-                selected_scene_id=selected_scene_id,
-                selected_product_name=selected_product_name,
-            )
-        else:
-            st.info("Aplique uma consulta para visualizar o mapa.")
+            if query_gdf is None or query_gdf.empty:
+                st.warning("Nenhuma geometria válida disponível para exibir no mapa.")
+            else:
+                render_tab_mapa(
+                    gdf_full=gdf_full,
+                    gdf_filtered=gdf_filtered,
+                    filtro=filtro_shape,
+                    query_gdf=query_gdf,
+                    roi_geojson=roi_geojson,
+                    available_images=available_images,
+                    selected_scene_id=selected_scene_id,
+                    selected_product_name=selected_product_name,
+                )
+
+        except Exception as e:
+            st.error(f"Erro ao renderizar o mapa: {e}")
+    else:
+        st.info("Aplique uma consulta para visualizar o mapa.")
 
     with tab2:
         st.subheader("Informações da consulta")
