@@ -109,7 +109,7 @@ def export_selected_image(
         roi_geojson=roi_geojson,
         out_png=out_png,
         satellite=satellite,
-        product_name=selected_product_name,
+        product_name=product_name,
     )
 
     return {
