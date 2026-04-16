@@ -18,7 +18,6 @@ from core.ee_init import init_ee
 
 from components.header import render_header
 from components.sidebar import render_sidebar
-from components.export_downloads import render_sidebar_export_downloads
 
 from tabs.tab_mapa import render_tab_mapa
 from tabs.tab_dados_satelite import render_tab_dados_satelite
@@ -30,6 +29,8 @@ from services.session_service import ensure_session_state
 from services.gee_service import list_available_images
 from services.export_service import export_selected_image
 from services.log_service import add_log
+
+from components.export_downloads import render_sidebar_export_downloads
 
 
 logging.basicConfig(level=logging.INFO)
@@ -60,27 +61,11 @@ def log_auth_login(user: str, role: str, status: str, username: str = ""):
     )
 
 
-def _init_app_state():
-    defaults = {
-        "export_result": None,
-        "consulta_pronta": False,
-        "aplicar": False,
-        "available_images": [],
-        "query_gdf": None,
-        "roi_geojson": None,
-        "filtro_aplicado": {},
-        "selected_scene_id": None,
-        "selected_product_name": None,
-        "modo_entrada": None,
-    }
-    for k, v in defaults.items():
-        if k not in st.session_state:
-            st.session_state[k] = v
-
-
 def main():
     ensure_session_state()
-    _init_app_state()
+
+    if "export_result" not in st.session_state:
+        st.session_state["export_result"] = None
 
     name = "Usuário"
     username = None
@@ -135,13 +120,16 @@ def main():
         st.stop()
 
     gdf_full = load_shapefile_full(GEO_PATH)
+
     if gdf_full is None or gdf_full.empty:
         st.error("Erro ao carregar shapefile.")
         st.stop()
 
+    available_images_sidebar = st.session_state.get("available_images", [])
+
     sidebar_data = render_sidebar(
         gdf_full=gdf_full,
-        available_images=st.session_state.get("available_images", []),
+        available_images=available_images_sidebar,
     )
 
     modo_entrada = sidebar_data.get("modo_entrada")
@@ -157,35 +145,37 @@ def main():
     parsed_coordinates = sidebar_data.get("parsed_coordinates")
     uploaded_kml = sidebar_data.get("uploaded_kml")
 
-    selected_scene_id_sidebar = sidebar_data.get("selected_scene_id")
-    selected_product_name_sidebar = sidebar_data.get("selected_product_name")
+    selected_scene_id = sidebar_data.get("selected_scene_id")
+    selected_product_name = sidebar_data.get("selected_product_name")
 
-    export_filename = (sidebar_data.get("export_filename", "") or "").strip()
+    export_filename = sidebar_data.get("export_filename", "").strip()
     export_requested = sidebar_data.get("export_requested", False)
 
-    if (
-        selected_scene_id_sidebar is not None
-        and selected_scene_id_sidebar != st.session_state.get("selected_scene_id")
-    ):
-        st.session_state["selected_scene_id"] = selected_scene_id_sidebar
+    if selected_scene_id is not None:
+        st.session_state["selected_scene_id"] = selected_scene_id
 
-    if (
-        selected_product_name_sidebar is not None
-        and selected_product_name_sidebar != st.session_state.get("selected_product_name")
-    ):
-        st.session_state["selected_product_name"] = selected_product_name_sidebar
+    if selected_product_name is not None:
+        st.session_state["selected_product_name"] = selected_product_name
 
     if apply:
         try:
             query_gdf, roi_geojson = get_query_gdf_and_roi_geojson(
-                gdf_full=gdf_full,
-                modo_entrada=modo_entrada,
-                selected_empresa=selected_empresa,
-                selected_fazenda=selected_fazenda,
-                parsed_coordinates=parsed_coordinates,
-                uploaded_kml=uploaded_kml,
-                buffer_m=buffer_m,
+                gdf_full,
+                modo_entrada,
+                selected_empresa,
+                selected_fazenda,
+                parsed_coordinates,
+                uploaded_kml,
+                buffer_m,
             )
+
+            st.session_state["aplicar"] = True
+            st.session_state["modo_entrada"] = modo_entrada
+            st.session_state["query_gdf"] = query_gdf
+            st.session_state["roi_geojson"] = roi_geojson
+            st.session_state["buffer_m"] = buffer_m
+            st.session_state["cloud_pct"] = cloud_pct
+            st.session_state["uploaded_kml_name"] = uploaded_kml.name if uploaded_kml else None
 
             filtro_aplicado = {
                 "modo_entrada": modo_entrada,
@@ -198,14 +188,6 @@ def main():
                 "cloud_pct": cloud_pct,
             }
 
-            st.session_state["aplicar"] = True
-            st.session_state["consulta_pronta"] = True
-            st.session_state["modo_entrada"] = modo_entrada
-            st.session_state["query_gdf"] = query_gdf
-            st.session_state["roi_geojson"] = roi_geojson
-            st.session_state["buffer_m"] = buffer_m
-            st.session_state["cloud_pct"] = cloud_pct
-            st.session_state["uploaded_kml_name"] = uploaded_kml.name if uploaded_kml else None
             st.session_state["filtro_aplicado"] = filtro_aplicado
 
             with st.spinner("Consultando imagens..."):
@@ -227,9 +209,11 @@ def main():
                 st.session_state["selected_scene_id"] = None
                 st.session_state["selected_product_name"] = None
 
+            # Mantém os downloads disponíveis mesmo após nova consulta.
+            # Se preferir limpar ao aplicar nova consulta, descomente:
+            # st.session_state["export_result"] = None
+
         except Exception as e:
-            st.session_state["consulta_pronta"] = False
-            st.session_state["aplicar"] = False
             st.error(f"Erro ao aplicar consulta: {e}")
 
     if export_requested:
@@ -247,7 +231,6 @@ def main():
                 raise ValueError("Selecione o tipo de imagem")
             if not roi_geojson_exp:
                 raise ValueError("ROI não definida")
-
             if not export_filename:
                 export_filename = "exportacao_imagem"
 
@@ -273,39 +256,32 @@ def main():
     tab1, tab2, tab3 = st.tabs(["🗺️ Mapa", "ℹ️ Info", "🛰️ Dados Satélite"])
 
     with tab1:
-        if st.session_state.get("aplicar") and st.session_state.get("consulta_pronta", False):
-            try:
-                filtro_shape = st.session_state.get("filtro_aplicado", {})
-                query_gdf = st.session_state.get("query_gdf")
-                roi_geojson = st.session_state.get("roi_geojson")
-                available_images = st.session_state.get("available_images", [])
-                selected_scene_id = st.session_state.get("selected_scene_id")
-                selected_product_name = st.session_state.get("selected_product_name")
+        if st.session_state.get("aplicar"):
+            filtro_shape = st.session_state.get("filtro_aplicado", {})
+            query_gdf = st.session_state.get("query_gdf")
+            roi_geojson = st.session_state.get("roi_geojson")
+            available_images = st.session_state.get("available_images", [])
+            selected_scene_id = st.session_state.get("selected_scene_id")
+            selected_product_name = st.session_state.get("selected_product_name")
 
-                gdf_filtered = gdf_full.copy()
-                if st.session_state.get("modo_entrada") == "Empresa / Fazenda":
-                    gdf_filtered = filter_gdf(
-                        gdf_full,
-                        filtro_shape.get("selected_empresa"),
-                        filtro_shape.get("selected_fazenda"),
-                    )
+            gdf_filtered = gdf_full.copy()
+            if st.session_state.get("modo_entrada") == "Empresa / Fazenda":
+                gdf_filtered = filter_gdf(
+                    gdf_full,
+                    filtro_shape.get("selected_empresa"),
+                    filtro_shape.get("selected_fazenda"),
+                )
 
-                if query_gdf is None or query_gdf.empty:
-                    st.warning("Nenhuma geometria válida disponível para exibir no mapa.")
-                else:
-                    render_tab_mapa(
-                        gdf_full=gdf_full,
-                        gdf_filtered=gdf_filtered,
-                        filtro=filtro_shape,
-                        query_gdf=query_gdf,
-                        roi_geojson=roi_geojson,
-                        available_images=available_images,
-                        selected_scene_id=selected_scene_id,
-                        selected_product_name=selected_product_name,
-                    )
-
-            except Exception as e:
-                st.error(f"Erro ao renderizar o mapa: {e}")
+            render_tab_mapa(
+                gdf_full=gdf_full,
+                gdf_filtered=gdf_filtered,
+                filtro=filtro_shape,
+                query_gdf=query_gdf,
+                roi_geojson=roi_geojson,
+                available_images=available_images,
+                selected_scene_id=selected_scene_id,
+                selected_product_name=selected_product_name,
+            )
         else:
             st.info("Aplique uma consulta para visualizar o mapa.")
 
@@ -318,7 +294,6 @@ def main():
                 "selected_product_name": st.session_state.get("selected_product_name"),
                 "export_filename": export_filename,
                 "export_result": st.session_state.get("export_result"),
-                "consulta_pronta": st.session_state.get("consulta_pronta"),
             }
         )
 
