@@ -142,14 +142,12 @@ def _ensure_polygonal_roi(gdf_work: gpd.GeoDataFrame, buffer_m: float):
 
     geom_type = geom.geom_type
 
-    # Se for ponto/linha, precisa virar área primeiro
     if geom_type in ["Point", "MultiPoint", "LineString", "MultiLineString"]:
         buffer_value = float(buffer_m) if buffer_m and float(buffer_m) > 0 else 200.0
         gdf_tmp = gpd.GeoDataFrame({"id": [1]}, geometry=[geom], crs="EPSG:4326")
         gdf_tmp = apply_buffer_in_meters(gdf_tmp, buffer_value)
         geom = unary_union(gdf_tmp.geometry.tolist())
 
-    # Se já for polígono e houver buffer solicitado, aplica depois
     elif buffer_m and float(buffer_m) > 0:
         gdf_tmp = gpd.GeoDataFrame({"id": [1]}, geometry=[geom], crs="EPSG:4326")
         gdf_tmp = apply_buffer_in_meters(gdf_tmp, float(buffer_m))
