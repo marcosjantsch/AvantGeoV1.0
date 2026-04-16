@@ -86,7 +86,7 @@ def render_header(
         with col1:
             logo_ok = False
             if logo_path:
-                path = Path(logo_path)
+                path = Path(logo_path).resolve()
                 if path.exists():
                     try:
                         st.image(str(path), width=56)
