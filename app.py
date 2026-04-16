@@ -30,6 +30,8 @@ from services.gee_service import list_available_images
 from services.export_service import export_selected_image
 from services.log_service import add_log
 
+from export import render_sidebar_export_downloads
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -61,6 +63,9 @@ def log_auth_login(user: str, role: str, status: str, username: str = ""):
 
 def main():
     ensure_session_state()
+
+    if "export_result" not in st.session_state:
+        st.session_state["export_result"] = None
 
     name = "Usuário"
     username = None
@@ -143,8 +148,7 @@ def main():
     selected_scene_id = sidebar_data.get("selected_scene_id")
     selected_product_name = sidebar_data.get("selected_product_name")
 
-    export_output_dir = sidebar_data.get("export_output_dir", "")
-    export_filename = sidebar_data.get("export_filename", "")
+    export_filename = sidebar_data.get("export_filename", "").strip()
     export_requested = sidebar_data.get("export_requested", False)
 
     if selected_scene_id is not None:
@@ -205,6 +209,10 @@ def main():
                 st.session_state["selected_scene_id"] = None
                 st.session_state["selected_product_name"] = None
 
+            # Mantém os downloads disponíveis mesmo após nova consulta.
+            # Se preferir limpar ao aplicar nova consulta, descomente:
+            # st.session_state["export_result"] = None
+
         except Exception as e:
             st.error(f"Erro ao aplicar consulta: {e}")
 
@@ -214,7 +222,7 @@ def main():
             selected_scene_id_exp = st.session_state.get("selected_scene_id")
             selected_product_name_exp = st.session_state.get("selected_product_name")
             roi_geojson_exp = st.session_state.get("roi_geojson")
-    
+
             if not available_images_exp:
                 raise ValueError("Sem imagens disponíveis")
             if not selected_scene_id_exp:
@@ -224,8 +232,8 @@ def main():
             if not roi_geojson_exp:
                 raise ValueError("ROI não definida")
             if not export_filename:
-                raise ValueError("Nome do arquivo vazio")
-    
+                export_filename = "exportacao_imagem"
+
             with st.spinner("Gerando arquivos para download..."):
                 result = export_selected_image(
                     available_images=available_images_exp,
@@ -235,30 +243,15 @@ def main():
                     output_dir="/tmp",
                     base_filename=export_filename,
                 )
-    
-            st.success("Exportação concluída.")
-    
-            png_path = result["png_path"]
-            tif_path = result["tif_path"]
-    
-            with open(png_path, "rb") as f_png:
-                st.download_button(
-                    label="📥 Baixar PNG",
-                    data=f_png.read(),
-                    file_name=result["png_name"],
-                    mime="image/png",
-                )
-    
-            with open(tif_path, "rb") as f_tif:
-                st.download_button(
-                    label="📥 Baixar TIFF georreferenciado",
-                    data=f_tif.read(),
-                    file_name=result["tif_name"],
-                    mime="image/tiff",
-                )
-    
+
+            st.session_state["export_result"] = result
+            st.sidebar.success("Exportação concluída.")
+
         except Exception as e:
-            st.error(f"Erro ao exportar: {e}")
+            st.session_state["export_result"] = None
+            st.sidebar.error(f"Erro ao exportar: {e}")
+
+    render_sidebar_export_downloads(st.session_state.get("export_result"))
 
     tab1, tab2, tab3 = st.tabs(["🗺️ Mapa", "ℹ️ Info", "🛰️ Dados Satélite"])
 
@@ -299,8 +292,8 @@ def main():
             {
                 "selected_scene_id": st.session_state.get("selected_scene_id"),
                 "selected_product_name": st.session_state.get("selected_product_name"),
-                "export_output_dir": st.session_state.get("export_output_dir", ""),
-                "export_filename": st.session_state.get("export_filename", ""),
+                "export_filename": export_filename,
+                "export_result": st.session_state.get("export_result"),
             }
         )
 
