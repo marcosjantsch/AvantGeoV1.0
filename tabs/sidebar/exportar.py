@@ -137,7 +137,7 @@ def render_sidebar_exportar(available_images=None):
     )
 
     return {
-        "export_output_dir": st.session_state.get("sb_export_output_dir", ""),
-        "export_filename": st.session_state.get("sb_export_filename", ""),
+        "export_filename": export_filename,
+        "export_result": st.session_state.get("export_result"),
         "export_requested": export_requested,
     }
