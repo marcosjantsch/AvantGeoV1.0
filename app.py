@@ -151,10 +151,10 @@ def main():
     export_filename = sidebar_data.get("export_filename", "").strip()
     export_requested = sidebar_data.get("export_requested", False)
 
-    if selected_scene_id is not None:
+    if selected_scene_id is not None and selected_scene_id != st.session_state.get("selected_scene_id"):
         st.session_state["selected_scene_id"] = selected_scene_id
-
-    if selected_product_name is not None:
+    
+    if selected_product_name is not None and selected_product_name != st.session_state.get("selected_product_name"):
         st.session_state["selected_product_name"] = selected_product_name
 
     if apply:
