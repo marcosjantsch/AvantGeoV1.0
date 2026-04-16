@@ -26,6 +26,9 @@ def dms_to_decimal(graus, minutos, segundos, hemisferio=None):
     if g is None or m is None or s is None:
         return None
 
+    if m < 0 or m >= 60 or s < 0 or s >= 60:
+        return None
+
     decimal = abs(g) + (m / 60.0) + (s / 3600.0)
 
     if hemisferio:
@@ -60,14 +63,46 @@ def parse_coordinate_payload(coord_system, values):
         if lat is None or lon is None:
             _fail("Preencha corretamente os campos DMS.")
 
-    elif coord_system == "Graus decimais (DD)":
+        if not (-90 <= lat <= 90):
+            _fail("Latitude DMS fora do intervalo válido (-90 a 90).")
+
+        if not (-180 <= lon <= 180):
+            _fail("Longitude DMS fora do intervalo válido (-180 a 180).")
+
+        return {
+            "coord_system": coord_system,
+            "latitude": lat,
+            "longitude": lon,
+            "utm_easting": None,
+            "utm_northing": None,
+            "utm_zone": None,
+            "utm_hemisphere": None,
+        }
+
+    if coord_system == "Graus decimais (DD)":
         lat = _to_float(values.get("latitude_dd"))
         lon = _to_float(values.get("longitude_dd"))
 
         if lat is None or lon is None:
             _fail("Latitude/Longitude inválidas.")
 
-    elif coord_system == "UTM":
+        if not (-90 <= lat <= 90):
+            _fail("Latitude fora do intervalo válido (-90 a 90).")
+
+        if not (-180 <= lon <= 180):
+            _fail("Longitude fora do intervalo válido (-180 a 180).")
+
+        return {
+            "coord_system": coord_system,
+            "latitude": lat,
+            "longitude": lon,
+            "utm_easting": None,
+            "utm_northing": None,
+            "utm_zone": None,
+            "utm_hemisphere": None,
+        }
+
+    if coord_system == "UTM":
         easting = _to_float(values.get("utm_easting"))
         northing = _to_float(values.get("utm_northing"))
         zone = values.get("utm_zone")
@@ -76,32 +111,30 @@ def parse_coordinate_payload(coord_system, values):
         if None in [easting, northing] or not zone or not hemisphere:
             _fail("Coordenadas UTM inválidas.")
 
+        try:
+            zone_int = int(str(zone).strip())
+        except Exception:
+            _fail("Fuso UTM inválido.")
+
+        if not (1 <= zone_int <= 60):
+            _fail("Fuso UTM deve estar entre 1 e 60.")
+
+        hemisphere = str(hemisphere).strip().upper()
+        if hemisphere not in ["S", "N"]:
+            _fail("Hemisfério UTM inválido. Use S ou N.")
+
         return {
             "coord_system": coord_system,
             "latitude": None,
             "longitude": None,
             "utm_easting": easting,
             "utm_northing": northing,
-            "utm_zone": zone,
+            "utm_zone": str(zone_int),
             "utm_hemisphere": hemisphere,
         }
 
-    else:
-        _fail("Sistema de coordenadas inválido.")
+    _fail("Sistema de coordenadas inválido.")
 
-    # valida faixa geográfica
-    if not (-90 <= lat <= 90 and -180 <= lon <= 180):
-        _fail("Coordenadas fora do intervalo válido.")
-
-    return {
-        "coord_system": coord_system,
-        "latitude": lat,
-        "longitude": lon,
-        "utm_easting": None,
-        "utm_northing": None,
-        "utm_zone": None,
-        "utm_hemisphere": None,
-    }
 
 def render_sidebar_entrada(gdf_full):
     st.markdown(
@@ -269,7 +302,12 @@ def render_sidebar_entrada(gdf_full):
                 key="utm_hemisphere",
             )
 
-        parsed_coordinates = parse_coordinate_payload(coord_system, coord_payload)
+        try:
+            parsed_coordinates = parse_coordinate_payload(coord_system, coord_payload)
+        except Exception as e:
+            parsed_coordinates = None
+            if any(str(v).strip() != "" for v in coord_payload.values() if v is not None):
+                st.error(str(e))
 
     elif modo_entrada == "Arquivo KML/KMZ":
         uploaded_kml = st.file_uploader(
