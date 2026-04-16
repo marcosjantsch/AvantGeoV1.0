@@ -150,7 +150,6 @@ def get_query_gdf_and_roi_geojson(
         ]:
             lat = parsed_coordinates.get("latitude")
             lon = parsed_coordinates.get("longitude")
-
             query_gdf = build_gdf_from_point_dd(lat, lon)
 
         elif coord_system == "UTM":
