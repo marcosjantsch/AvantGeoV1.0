@@ -43,7 +43,7 @@ def _export_rgb_png(ee_img, roi_geojson, out_png: Path, satellite: str, product_
     out_png.write_bytes(content)
 
 
-def _export_geotiff(ee_img, roi_geojson, out_tif: Path, satellite: str, product_name: str):
+def _export_geotiff(ee_img, roi_geojson, out_tif: Path, satellite: str):
     region = ee_geometry_from_geojson(roi_geojson)
 
     url = ee.Image(ee_img).getDownloadURL({
@@ -74,6 +74,8 @@ def export_selected_image(
     if not roi_geojson:
         raise ValueError("ROI não definida para exportação.")
 
+    base_filename = (base_filename or "exportacao_imagem").strip()
+
     out_dir = Path(output_dir or "/tmp")
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -101,7 +103,6 @@ def export_selected_image(
         roi_geojson=roi_geojson,
         out_tif=out_tif,
         satellite=satellite,
-        product_name=selected_product_name,
     )
 
     _export_rgb_png(
@@ -109,7 +110,7 @@ def export_selected_image(
         roi_geojson=roi_geojson,
         out_png=out_png,
         satellite=satellite,
-        product_name=product_name,
+        product_name=selected_product_name,
     )
 
     return {
