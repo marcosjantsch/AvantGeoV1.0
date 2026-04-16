@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
 from pathlib import Path
-from typing import Optional
 
 import requests
-import rasterio
-from rasterio.transform import Affine
-from PIL import Image
-import numpy as np
 import ee
 
 from services.gee_service import (
@@ -32,29 +27,25 @@ def _download_ee_bytes(url: str) -> bytes:
     return resp.content
 
 
-def _export_rgb_jpeg(ee_img, roi_geojson, out_jpg: Path, satellite: str, product_name: str):
+def _export_rgb_png(ee_img, roi_geojson, out_png: Path, satellite: str, product_name: str):
     region = ee_geometry_from_geojson(roi_geojson)
 
-    # Para JPEG usamos visualização renderizada
     vis = get_product_vis_params(satellite, product_name)
     rendered = ee.Image(ee_img).visualize(**vis)
 
     url = rendered.getThumbURL({
         "region": region,
         "dimensions": 2048,
-        "format": "jpg",
+        "format": "png",
     })
 
     content = _download_ee_bytes(url)
-    out_jpg.write_bytes(content)
+    out_png.write_bytes(content)
 
 
 def _export_geotiff(ee_img, roi_geojson, out_tif: Path, satellite: str, product_name: str):
     region = ee_geometry_from_geojson(roi_geojson)
 
-    # Para GeoTIFF exportamos a imagem numérica
-    # Se for índice de 1 banda, sai 1 banda georreferenciada
-    # Se for RGB, saem 3 bandas
     url = ee.Image(ee_img).getDownloadURL({
         "region": region,
         "scale": 10 if satellite == "Sentinel-2" else 30,
@@ -80,13 +71,10 @@ def export_selected_image(
     if not selected_product_name:
         raise ValueError("Nenhum tipo de imagem selecionado.")
 
-    if not output_dir:
-        raise ValueError("Caminho de saída não informado.")
-
     if not roi_geojson:
         raise ValueError("ROI não definida para exportação.")
 
-    out_dir = Path(output_dir)
+    out_dir = Path(output_dir or "/tmp")
     out_dir.mkdir(parents=True, exist_ok=True)
 
     selected_spec = _find_selected_spec(available_images, selected_scene_id)
@@ -106,7 +94,7 @@ def export_selected_image(
     )
 
     out_tif = out_dir / f"{base_filename}.tif"
-    out_jpg = out_dir / f"{base_filename}.jpg"
+    out_png = out_dir / f"{base_filename}.png"
 
     _export_geotiff(
         ee_img=ee_img,
@@ -116,15 +104,17 @@ def export_selected_image(
         product_name=selected_product_name,
     )
 
-    _export_rgb_jpeg(
+    _export_rgb_png(
         ee_img=ee_img,
         roi_geojson=roi_geojson,
-        out_jpg=out_jpg,
+        out_png=out_png,
         satellite=satellite,
         product_name=selected_product_name,
     )
 
     return {
-        "tif": str(out_tif),
-        "jpg": str(out_jpg),
+        "tif_path": str(out_tif),
+        "png_path": str(out_png),
+        "tif_name": out_tif.name,
+        "png_name": out_png.name,
     }
