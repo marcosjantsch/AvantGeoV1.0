@@ -30,7 +30,7 @@ from services.gee_service import list_available_images
 from services.export_service import export_selected_image
 from services.log_service import add_log
 
-from export import render_sidebar_export_downloads
+from components.export_downloads import render_sidebar_export_downloads
 
 
 logging.basicConfig(level=logging.INFO)
