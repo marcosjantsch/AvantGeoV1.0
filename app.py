@@ -214,7 +214,7 @@ def main():
             selected_scene_id_exp = st.session_state.get("selected_scene_id")
             selected_product_name_exp = st.session_state.get("selected_product_name")
             roi_geojson_exp = st.session_state.get("roi_geojson")
-
+    
             if not available_images_exp:
                 raise ValueError("Sem imagens disponíveis")
             if not selected_scene_id_exp:
@@ -223,24 +223,40 @@ def main():
                 raise ValueError("Selecione o tipo de imagem")
             if not roi_geojson_exp:
                 raise ValueError("ROI não definida")
-            if not export_output_dir:
-                raise ValueError("Defina o caminho de saída")
             if not export_filename:
                 raise ValueError("Nome do arquivo vazio")
-
-            with st.spinner("Exportando..."):
+    
+            with st.spinner("Gerando arquivos para download..."):
                 result = export_selected_image(
-                    available_images_exp,
-                    selected_scene_id_exp,
-                    selected_product_name_exp,
-                    roi_geojson_exp,
-                    export_output_dir,
-                    export_filename,
+                    available_images=available_images_exp,
+                    selected_scene_id=selected_scene_id_exp,
+                    selected_product_name=selected_product_name_exp,
+                    roi_geojson=roi_geojson_exp,
+                    output_dir="/tmp",
+                    base_filename=export_filename,
                 )
-
-            st.success("Exportação concluída")
-            st.write(result)
-
+    
+            st.success("Exportação concluída.")
+    
+            png_path = result["png_path"]
+            tif_path = result["tif_path"]
+    
+            with open(png_path, "rb") as f_png:
+                st.download_button(
+                    label="📥 Baixar PNG",
+                    data=f_png.read(),
+                    file_name=result["png_name"],
+                    mime="image/png",
+                )
+    
+            with open(tif_path, "rb") as f_tif:
+                st.download_button(
+                    label="📥 Baixar TIFF georreferenciado",
+                    data=f_tif.read(),
+                    file_name=result["tif_name"],
+                    mime="image/tiff",
+                )
+    
         except Exception as e:
             st.error(f"Erro ao exportar: {e}")
 
