@@ -3,6 +3,33 @@ from pathlib import Path
 import streamlit as st
 
 
+def _resolve_logo_path(logo_path: str | Path):
+    candidates = []
+
+    if logo_path:
+        p = Path(logo_path)
+        candidates.append(p)
+        if not p.is_absolute():
+            candidates.append(Path.cwd() / p)
+
+    candidates.extend([
+        Path.cwd() / "assets" / "Logo.png",
+        Path.cwd() / "assets" / "logo.png",
+        Path(__file__).resolve().parent.parent / "assets" / "Logo.png",
+        Path(__file__).resolve().parent.parent / "assets" / "logo.png",
+    ])
+
+    for c in candidates:
+        try:
+            c = c.resolve()
+            if c.exists() and c.is_file():
+                return c
+        except Exception:
+            continue
+
+    return None
+
+
 def render_header(
     logo_path: str,
     app_name: str,
@@ -13,13 +40,6 @@ def render_header(
     authenticator=None,
     subtitle: str = "",
 ):
-    """
-    Header compacto:
-    - sem linha superior destacada
-    - logout ao lado do bloco usuário/perfil
-    - layout mais alto e alinhado na mesma linha
-    """
-
     with st.container():
         st.markdown(
             """
@@ -55,15 +75,6 @@ def render_header(
                 line-height: 1.1;
             }
 
-            .header-user-wrap {
-                display: flex;
-                align-items: center;
-                justify-content: flex-end;
-                gap: 14px;
-                width: 100%;
-                margin-top: 2px;
-            }
-
             .header-user {
                 font-size: 13px;
                 line-height: 1.25;
@@ -85,14 +96,15 @@ def render_header(
 
         with col1:
             logo_ok = False
-            if logo_path:
-                path = Path(logo_path).resolve()
-                if path.exists():
-                    try:
-                        st.image(str(path), width=56)
-                        logo_ok = True
-                    except Exception:
-                        logo_ok = False
+            resolved_logo = _resolve_logo_path(logo_path)
+
+            if resolved_logo:
+                try:
+                    logo_bytes = resolved_logo.read_bytes()
+                    st.image(logo_bytes, width=56)
+                    logo_ok = True
+                except Exception:
+                    logo_ok = False
 
             if not logo_ok:
                 st.markdown(
