@@ -49,19 +49,55 @@ def _build_source_label() -> str:
     return "exportacao_imagem"
 
 
+def _infer_product_name(scene_for_export) -> str:
+    selected_product_mem = st.session_state.get("selected_product_name")
+    if selected_product_mem:
+        return selected_product_mem
+
+    if scene_for_export:
+        satellite = scene_for_export.get("satellite")
+        if satellite == "Sentinel-2":
+            return "RGB"
+        return "RGB"
+
+    return ""
+
+
 def render_sidebar_exportar(available_images=None):
-    if available_images is None:
-        available_images = []
+    available_images_param = available_images or []
+    available_images_mem = st.session_state.get("available_images", []) or []
+    available_images_all = available_images_mem if available_images_mem else available_images_param
 
     export_result = st.session_state.get("export_result")
     export_in_progress = st.session_state.get("export_in_progress", False)
     last_export_error = st.session_state.get("last_export_error")
-    roi_geojson = st.session_state.get("roi_geojson")
-    selected_scene_id = st.session_state.get("selected_scene_id")
-    selected_product_mem = st.session_state.get("selected_product_name")
 
-    scene_for_export = next((img for img in available_images if img.get("id") == selected_scene_id), None)
-    has_data = bool(roi_geojson and available_images and selected_scene_id and selected_product_mem)
+    roi_geojson = st.session_state.get("roi_geojson")
+    roi_ready_for_export = st.session_state.get("roi_ready_for_export", False)
+
+    selected_scene_id = st.session_state.get("selected_scene_id")
+
+    scene_for_export = next(
+        (img for img in available_images_all if img.get("id") == selected_scene_id),
+        None,
+    )
+
+    selected_product_mem = _infer_product_name(scene_for_export)
+    if selected_product_mem and not st.session_state.get("selected_product_name"):
+        st.session_state["selected_product_name"] = selected_product_mem
+
+    has_valid_roi = bool(roi_geojson and roi_ready_for_export)
+    has_scene = bool(selected_scene_id)
+    has_product = bool(selected_product_mem)
+    has_images = bool(available_images_all)
+
+    can_generate_export = bool(
+        has_valid_roi
+        and has_scene
+        and has_product
+        and has_images
+        and not export_in_progress
+    )
 
     sat_name = scene_for_export.get("satellite") if scene_for_export else ""
     scene_date = scene_for_export.get("date") if scene_for_export else ""
@@ -86,8 +122,15 @@ def render_sidebar_exportar(available_images=None):
         st.session_state["sb_export_filename"] = suggested_filename
     st.session_state["_last_auto_export_filename"] = suggested_filename
 
-    st.text_input("Nome base do arquivo", key="sb_export_filename", disabled=not has_data)
-    st.caption("Clique primeiro em Gerar arquivos para download. Os botões PNG e TIFF só serão liberados após a geração terminar.")
+    st.text_input(
+        "Nome base do arquivo",
+        key="sb_export_filename",
+        disabled=not (has_valid_roi and has_scene and has_product),
+    )
+
+    st.caption(
+        "Clique primeiro em Gerar arquivos para download. Os botões PNG e TIFF só serão liberados após a geração terminar."
+    )
 
     if export_in_progress:
         st.info("Gerando arquivos em memória...")
@@ -95,9 +138,27 @@ def render_sidebar_exportar(available_images=None):
     if last_export_error:
         st.error(last_export_error)
 
+    if has_valid_roi:
+        st.success("ROI válida para exportação.")
+    else:
+        st.info("ROI ainda não validada para exportação.")
+
+    if has_scene:
+        st.caption(f"Cena selecionada:\n{selected_scene_id}")
+    else:
+        st.caption("Cena selecionada: nenhuma")
+
+    if has_product:
+        st.caption(f"Tipo de imagem: {selected_product_mem}")
+    else:
+        st.caption("Tipo de imagem: nenhum")
+
     export_requested = False
-    if not has_data:
-        st.info("A exportação será habilitada quando existir uma consulta aplicada com ROI válida, cena selecionada e tipo de imagem definido.")
+    if not can_generate_export:
+        st.info(
+            "A exportação será habilitada quando existir uma ROI válida, "
+            "uma cena selecionada e um tipo de imagem definido."
+        )
     else:
         export_requested = st.button(
             "📦 Gerar arquivos para download",
@@ -109,28 +170,34 @@ def render_sidebar_exportar(available_images=None):
             st.session_state["export_result"] = None
             st.session_state["last_export_error"] = None
 
-    can_download = bool(export_result and not export_in_progress)
+    png_bytes = (export_result or {}).get("png_bytes")
+    tif_bytes = (export_result or {}).get("tif_bytes")
+
+    can_download_png = bool(png_bytes and not export_in_progress)
+    can_download_tif = bool(tif_bytes and not export_in_progress)
+    can_download_any = bool(export_result and not export_in_progress)
 
     st.download_button(
         label="📥 Baixar PNG",
-        data=(export_result or {}).get("png_bytes", b""),
+        data=png_bytes if png_bytes is not None else b"",
         file_name=(export_result or {}).get("png_name", "imagem.png"),
         mime="image/png",
         use_container_width=True,
-        disabled=not can_download,
+        disabled=not can_download_png,
         key=f"download_png_{(export_result or {}).get('png_name', 'imagem.png')}",
     )
+
     st.download_button(
         label="📥 Baixar TIFF georreferenciado",
-        data=(export_result or {}).get("tif_bytes", b""),
+        data=tif_bytes if tif_bytes is not None else b"",
         file_name=(export_result or {}).get("tif_name", "imagem.tif"),
         mime="image/tiff",
         use_container_width=True,
-        disabled=not can_download,
+        disabled=not can_download_tif,
         key=f"download_tif_{(export_result or {}).get('tif_name', 'imagem.tif')}",
     )
 
-    if can_download:
+    if can_download_any:
         st.success("Arquivos prontos para download.")
 
     return {
