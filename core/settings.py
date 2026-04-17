@@ -8,7 +8,7 @@ LAYOUT = "wide"
 SIDEBAR_STATE = "expanded"
 
 EE_PROJECT = "avantv2"
-ASSET_FAZENDAS = "projects/AvantV2/assets/GFP/Geo_Limites_GFP_Setembro_2025"
+ASSET_FAZENDAS = "projects/avantv1-475717/assets/GFP/Geo_Limites_GFP_Setembro_2025"
 COL_EMPRESA = "EMPRESA"
 COL_FAZENDA = "FAZENDA"
 
