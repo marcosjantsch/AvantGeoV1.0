@@ -96,7 +96,6 @@ def _store_query_results(
 def _infer_default_product_name(imgs):
     if not imgs:
         return None
-    # fallback robusto para cloud/local
     return "RGB"
 
 
@@ -159,12 +158,23 @@ def _run_query(
         if not current_scene or not any(img.get("id") == current_scene for img in imgs):
             st.session_state["selected_scene_id"] = imgs[0]["id"]
 
-        # fallback para Cloud Run/Coldroot: garantir tipo de imagem persistido
         if not st.session_state.get("selected_product_name"):
             st.session_state["selected_product_name"] = _infer_default_product_name(imgs)
     else:
         st.session_state["selected_scene_id"] = None
         st.session_state["selected_product_name"] = None
+
+
+def _ensure_ee_initialized():
+    if st.session_state.get("_ee_initialized", False):
+        return True, None
+
+    ok_ee, msg_ee = init_ee()
+    if ok_ee:
+        st.session_state["_ee_initialized"] = True
+        return True, None
+
+    return False, msg_ee
 
 
 def _ensure_roi_ready_for_export(
@@ -176,11 +186,6 @@ def _ensure_roi_ready_for_export(
     uploaded_kml,
     buffer_m,
 ):
-    """
-    Garante que query_gdf e roi_geojson existam antes da exportação.
-    No modo Capturar Coordenada, a ROI gerada a partir do ponto capturado
-    deve ser aceita normalmente como ROI válida para exportação.
-    """
     roi_geojson = st.session_state.get("roi_geojson")
     query_gdf = st.session_state.get("query_gdf")
 
@@ -278,7 +283,6 @@ def _handle_export(
 def main():
     ensure_session_state()
 
-    # blindagem extra de estados críticos
     st.session_state.setdefault("available_images", [])
     st.session_state.setdefault("selected_scene_id", None)
     st.session_state.setdefault("selected_product_name", None)
@@ -288,6 +292,9 @@ def main():
     st.session_state.setdefault("export_result", None)
     st.session_state.setdefault("export_in_progress", False)
     st.session_state.setdefault("last_export_error", None)
+    st.session_state.setdefault("_ee_initialized", False)
+    st.session_state.setdefault("_refresh_after_apply_done", False)
+    st.session_state.setdefault("_refresh_after_export_done", False)
 
     name = "Usuário"
     username = None
@@ -335,7 +342,7 @@ def main():
         subtitle="Visualização de Fazendas e Imagens Earth Engine",
     )
 
-    ok_ee, msg_ee = init_ee()
+    ok_ee, msg_ee = _ensure_ee_initialized()
     if not ok_ee:
         st.error(msg_ee)
         st.stop()
@@ -377,21 +384,16 @@ def main():
     if selected_product_name is not None:
         st.session_state["selected_product_name"] = selected_product_name
 
-    # fallback adicional para cenários cloud em que o produto some no rerun
     if not st.session_state.get("selected_product_name") and st.session_state.get("selected_scene_id"):
         imgs_mem = st.session_state.get("available_images", [])
         if imgs_mem:
             st.session_state["selected_product_name"] = _infer_default_product_name(imgs_mem)
 
-    # -----------------------------
-    # APLICAR CONSULTA
-    # -----------------------------
     if apply:
         try:
             if modo_entrada == CAPTURE_MODE_LABEL:
                 parsed_coordinates = st.session_state.get("captured_coordinate")
 
-            # ao aplicar novamente, invalida export anterior
             _reset_export_state()
 
             _run_query(
@@ -408,23 +410,23 @@ def main():
                 cloud_pct=cloud_pct,
             )
 
-            # blindagem final: garantir persistência após a consulta
             st.session_state["roi_ready_for_export"] = bool(st.session_state.get("roi_geojson"))
+
             if not st.session_state.get("selected_product_name") and st.session_state.get("available_images"):
                 st.session_state["selected_product_name"] = _infer_default_product_name(
                     st.session_state.get("available_images", [])
                 )
 
-            # IMPORTANTE:
-            # não usar st.rerun() aqui; o clique do botão já reroda o script
-            # e o rerun extra pode quebrar a persistência no Cloud Run
+            if not st.session_state.get("_refresh_after_apply_done", False):
+                st.session_state["_refresh_after_apply_done"] = True
+                st.rerun()
 
         except Exception as e:
+            st.session_state["_refresh_after_apply_done"] = False
             st.error(f"Erro ao aplicar consulta: {e}")
+    else:
+        st.session_state["_refresh_after_apply_done"] = False
 
-    # -----------------------------
-    # EXPORTAR DOWNLOADS
-    # -----------------------------
     if export_requested:
         _handle_export(
             gdf_full=gdf_full,
@@ -436,7 +438,12 @@ def main():
             buffer_m=buffer_m,
             export_filename=export_filename,
         )
-        st.rerun()
+
+        if not st.session_state.get("_refresh_after_export_done", False):
+            st.session_state["_refresh_after_export_done"] = True
+            st.rerun()
+    else:
+        st.session_state["_refresh_after_export_done"] = False
 
     tab1, tab2, tab3 = st.tabs(["🗺️ Mapa", "ℹ️ Info", "🛰️ Dados Satélite"])
 
