@@ -55,9 +55,6 @@ def _infer_product_name(scene_for_export) -> str:
         return selected_product_mem
 
     if scene_for_export:
-        satellite = scene_for_export.get("satellite")
-        if satellite == "Sentinel-2":
-            return "RGB"
         return "RGB"
 
     return ""
@@ -74,7 +71,6 @@ def render_sidebar_exportar(available_images=None):
 
     roi_geojson = st.session_state.get("roi_geojson")
     roi_ready_for_export = st.session_state.get("roi_ready_for_export", False)
-
     selected_scene_id = st.session_state.get("selected_scene_id")
 
     scene_for_export = next(
