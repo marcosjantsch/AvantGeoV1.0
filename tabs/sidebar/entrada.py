@@ -16,7 +16,6 @@ from services.coordinate_service import (
     parse_coordinates_text,
 )
 
-
 MODO_EMPRESA_FAZENDA = "Empresa / Fazenda"
 MODO_COORDENADA = "Coordenada"
 MODO_KML = "Arquivo KML/KMZ"
@@ -38,6 +37,7 @@ def _safe_unique_values(gdf, column: str):
         return []
     if column not in gdf.columns:
         return []
+
     vals = gdf[column].dropna().astype(str).str.strip()
     vals = vals[vals != ""]
     return sorted(vals.unique().tolist())
@@ -60,7 +60,6 @@ def _safe_filter_fazendas(gdf, empresa: Optional[str]):
 
 def _render_empresa_fazenda(gdf_full):
     empresas = _safe_unique_values(gdf_full, "EMPRESA")
-
     shapefile_loaded = gdf_full is not None and not getattr(gdf_full, "empty", True)
 
     if not shapefile_loaded:
@@ -136,6 +135,8 @@ def _render_coordenada_manual():
                     f"Coordenada válida: {parsed_coordinates.get('latitude'):.6f}, "
                     f"{parsed_coordinates.get('longitude'):.6f}"
                 )
+            else:
+                st.warning("Coordenada inválida.")
         except Exception as e:
             st.warning(f"Coordenada inválida: {e}")
 
