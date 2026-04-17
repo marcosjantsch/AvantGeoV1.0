@@ -177,6 +177,15 @@ def _ensure_ee_initialized():
     return False, msg_ee
 
 
+def _get_gdf_full_lazy(force_reload: bool = False):
+    if not force_reload and st.session_state.get("_gdf_full_cache") is not None:
+        return st.session_state["_gdf_full_cache"]
+
+    gdf_full = load_shapefile_full(GEO_PATH)
+    st.session_state["_gdf_full_cache"] = gdf_full
+    return gdf_full
+
+
 def _ensure_roi_ready_for_export(
     gdf_full,
     modo_entrada,
@@ -198,6 +207,12 @@ def _ensure_roi_ready_for_export(
 
     if modo_entrada == CAPTURE_MODE_LABEL and not parsed_coordinates:
         raise ValueError("Capture uma coordenada válida antes de exportar.")
+
+    if gdf_full is None:
+        gdf_full = _get_gdf_full_lazy()
+
+    if gdf_full is None or getattr(gdf_full, "empty", True):
+        raise ValueError("Erro ao carregar shapefile para exportação.")
 
     query_gdf, roi_geojson = get_query_gdf_and_roi_geojson(
         gdf_full,
@@ -295,6 +310,7 @@ def main():
     st.session_state.setdefault("_ee_initialized", False)
     st.session_state.setdefault("_refresh_after_apply_done", False)
     st.session_state.setdefault("_refresh_after_export_done", False)
+    st.session_state.setdefault("_gdf_full_cache", None)
 
     name = "Usuário"
     username = None
@@ -347,15 +363,10 @@ def main():
         st.error(msg_ee)
         st.stop()
 
-    gdf_full = load_shapefile_full(GEO_PATH)
-    st.session_state["_gdf_full_cache"] = gdf_full
-
-    if gdf_full is None or gdf_full.empty:
-        st.error("Erro ao carregar shapefile.")
-        st.stop()
+    gdf_full_cached = st.session_state.get("_gdf_full_cache")
 
     sidebar_data = render_sidebar(
-        gdf_full=gdf_full,
+        gdf_full=gdf_full_cached,
         available_images=st.session_state.get("available_images", []),
     )
 
@@ -391,6 +402,11 @@ def main():
 
     if apply:
         try:
+            gdf_full = _get_gdf_full_lazy()
+
+            if gdf_full is None or getattr(gdf_full, "empty", True):
+                raise ValueError("Erro ao carregar shapefile.")
+
             if modo_entrada == CAPTURE_MODE_LABEL:
                 parsed_coordinates = st.session_state.get("captured_coordinate")
 
@@ -429,7 +445,7 @@ def main():
 
     if export_requested:
         _handle_export(
-            gdf_full=gdf_full,
+            gdf_full=st.session_state.get("_gdf_full_cache"),
             modo_entrada=modo_entrada,
             selected_empresa=selected_empresa,
             selected_fazenda=selected_fazenda,
@@ -461,14 +477,19 @@ def main():
                 "cloud_pct": cloud_pct,
             }
 
+        gdf_full = st.session_state.get("_gdf_full_cache")
         query_gdf = st.session_state.get("query_gdf")
         roi_geojson = st.session_state.get("roi_geojson")
         available_images = st.session_state.get("available_images", [])
         selected_scene_id = st.session_state.get("selected_scene_id")
         selected_product_name = st.session_state.get("selected_product_name")
 
-        gdf_filtered = gdf_full.copy()
-        if st.session_state.get("modo_entrada") == "Empresa / Fazenda":
+        gdf_filtered = None
+        if (
+            gdf_full is not None
+            and not getattr(gdf_full, "empty", True)
+            and st.session_state.get("modo_entrada") == "Empresa / Fazenda"
+        ):
             gdf_filtered = filter_gdf(
                 gdf_full,
                 filtro_shape.get("selected_empresa"),
@@ -491,6 +512,7 @@ def main():
         st.write(st.session_state.get("filtro_aplicado", {}))
         st.write(
             {
+                "gdf_cache_loaded": st.session_state.get("_gdf_full_cache") is not None,
                 "selected_scene_id": st.session_state.get("selected_scene_id"),
                 "selected_product_name": st.session_state.get("selected_product_name"),
                 "export_filename": export_filename,
