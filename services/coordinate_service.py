@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 
+import re
 from typing import Any, Dict, Optional
 
 
@@ -168,3 +169,46 @@ def parse_coordinate_payload(coord_system, values):
         "latitude_dms": None,
         "longitude_dms": None,
     }
+
+
+def parse_coordinates_text(text: str) -> Optional[Dict[str, Any]]:
+    """
+    Faz o parse de coordenadas em texto simples.
+
+    Exemplos aceitos:
+    -24.248421, -49.692840
+    -24.248421 -49.692840
+    -24.248421;-49.692840
+
+    Retorna no mesmo formato do build_capture_payload().
+    """
+    if not text:
+        return None
+
+    normalized = str(text).strip()
+    normalized = normalized.replace(";", ",")
+    normalized = re.sub(r"\s+", " ", normalized)
+
+    parts = re.split(r"[,\s]+", normalized)
+
+    if len(parts) < 2:
+        return None
+
+    lat = _to_float(parts[0])
+    lon = _to_float(parts[1])
+
+    if lat is None or lon is None:
+        return None
+
+    if not (-90 <= lat <= 90):
+        return None
+
+    if not (-180 <= lon <= 180):
+        return None
+
+    return build_capture_payload(
+        latitude=lat,
+        longitude=lon,
+        source="manual_input",
+        label="Coordenada informada manualmente",
+    )
