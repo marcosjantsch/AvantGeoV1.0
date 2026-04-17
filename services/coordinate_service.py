@@ -5,6 +5,9 @@ from typing import Any, Dict, Optional
 
 
 CAPTURE_MODE_LABEL = "Capturar Coordenada"
+DEFAULT_CAPTURE_CITY_NAME = "Coordenada inicial do mapa"
+DEFAULT_CAPTURE_LATITUDE = -24.248421
+DEFAULT_CAPTURE_LONGITUDE = -49.692840
 
 
 def _to_float(value: Any) -> Optional[float]:
@@ -62,7 +65,12 @@ def format_dd(value: Optional[float], digits: int = 6) -> str:
     return f"{float(value):.{digits}f}"
 
 
-def build_capture_payload(latitude: Optional[float], longitude: Optional[float]) -> Optional[Dict[str, Any]]:
+def build_capture_payload(
+    latitude: Optional[float],
+    longitude: Optional[float],
+    source: str = "map_click",
+    label: Optional[str] = None,
+) -> Optional[Dict[str, Any]]:
     if latitude is None or longitude is None:
         return None
 
@@ -81,8 +89,18 @@ def build_capture_payload(latitude: Optional[float], longitude: Optional[float])
         "longitude_dd": longitude,
         "latitude_dms": decimal_to_dms(latitude, is_latitude=True),
         "longitude_dms": decimal_to_dms(longitude, is_latitude=False),
-        "source": "map_click",
+        "source": source,
+        "label": label,
     }
+
+
+def get_default_capture_payload() -> Dict[str, Any]:
+    return build_capture_payload(
+        latitude=DEFAULT_CAPTURE_LATITUDE,
+        longitude=DEFAULT_CAPTURE_LONGITUDE,
+        source="default_city_center",
+        label=DEFAULT_CAPTURE_CITY_NAME,
+    )
 
 
 def parse_coordinate_payload(coord_system, values):

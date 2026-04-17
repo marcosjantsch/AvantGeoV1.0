@@ -12,19 +12,13 @@ MIN_ROI_SIZE_M = 500.0
 def filter_gdf(gdf: gpd.GeoDataFrame, empresa: str = None, fazenda: str = None):
     gdf_filtered = gdf.copy()
 
-    if (
-        empresa
-        and fazenda
-        and all(c in gdf_filtered.columns for c in ["EMPRESA", "FAZENDA"])
-    ):
+    if empresa and fazenda and all(c in gdf_filtered.columns for c in ["EMPRESA", "FAZENDA"]):
         gdf_filtered = gdf_filtered[
             (gdf_filtered["EMPRESA"].astype(str) == str(empresa))
             & (gdf_filtered["FAZENDA"].astype(str) == str(fazenda))
         ]
     elif empresa and "EMPRESA" in gdf_filtered.columns:
-        gdf_filtered = gdf_filtered[
-            gdf_filtered["EMPRESA"].astype(str) == str(empresa)
-        ]
+        gdf_filtered = gdf_filtered[gdf_filtered["EMPRESA"].astype(str) == str(empresa)]
 
     return gdf_filtered
 
@@ -46,36 +40,14 @@ def build_gdf_from_point_dd(latitude: float, longitude: float):
     return gpd.GeoDataFrame({"name": ["Ponto"]}, geometry=[pt], crs="EPSG:4326")
 
 
-def build_gdf_from_point_utm(
-    easting: float,
-    northing: float,
-    zone: str,
-    hemisphere: str,
-):
+def build_gdf_from_point_utm(easting: float, northing: float, zone: str, hemisphere: str):
     zone_int = int(str(zone).strip())
     hemi = str(hemisphere).strip().upper()
     epsg = 32700 + zone_int if hemi == "S" else 32600 + zone_int
 
-    transformer = Transformer.from_crs(
-        f"EPSG:{epsg}",
-        "EPSG:4326",
-        always_xy=True,
-    )
+    transformer = Transformer.from_crs(f"EPSG:{epsg}", "EPSG:4326", always_xy=True)
     lon, lat = transformer.transform(easting, northing)
-
     return build_gdf_from_point_dd(latitude=lat, longitude=lon)
-
-
-def apply_buffer_in_meters(gdf: gpd.GeoDataFrame, buffer_m: float):
-    if gdf is None or gdf.empty:
-        raise ValueError("GeoDataFrame vazio.")
-
-    if buffer_m is None or float(buffer_m) <= 0:
-        return _ensure_wgs84(gdf)
-
-    gdf_proj = _ensure_wgs84(gdf).to_crs(3857).copy()
-    gdf_proj["geometry"] = gdf_proj.geometry.buffer(float(buffer_m))
-    return gdf_proj.to_crs(4326)
 
 
 def build_rectangular_roi_gdf(
@@ -88,8 +60,8 @@ def build_rectangular_roi_gdf(
     gdf_proj = gdf_work.to_crs(3857)
 
     minx, miny, maxx, maxy = gdf_proj.total_bounds
-
     buffer_value = max(float(buffer_m or 0), 0.0)
+
     minx -= buffer_value
     miny -= buffer_value
     maxx += buffer_value

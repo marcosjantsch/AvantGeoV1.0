@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 import streamlit as st
+
+from services.coordinate_service import get_default_capture_payload
 
 
 def ensure_session_state():
@@ -18,10 +22,12 @@ def ensure_session_state():
         "selected_image_ids": [],
         "buffer_m": 200,
         "cloud_pct": 25,
-        "captured_coordinate": None,
+        "captured_coordinate": get_default_capture_payload(),
         "map_hover_coordinate": None,
         "export_result": None,
         "export_in_progress": False,
+        "last_export_error": None,
+        "capture_initialized": True,
     }
 
     for key, value in defaults.items():

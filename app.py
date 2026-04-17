@@ -34,14 +34,12 @@ from tabs.tab_mapa import render_tab_mapa
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 st.set_page_config(
     page_title=APP_TITLE,
     page_icon=APP_ICON,
     layout=LAYOUT,
     initial_sidebar_state=SIDEBAR_STATE,
 )
-
 apply_styles()
 
 
@@ -50,29 +48,15 @@ def log_auth_login(user: str, role: str, status: str, username: str = ""):
         level="INFO" if status == "SUCCESS" else "ERROR",
         source="auth_login_log",
         message="Login realizado" if status == "SUCCESS" else "Falha no login",
-        details={
-            "user": user,
-            "username": username,
-            "role": role,
-            "status": status,
-        },
+        details={"user": user, "username": username, "role": role, "status": status},
     )
 
 
-def _build_capture_query_gdf():
-    captured = st.session_state.get("captured_coordinate")
-    if not captured:
-        return None, None
-
-    return get_query_gdf_and_roi_geojson(
-        gdf_full=st.session_state.get("_gdf_full_cache"),
-        modo_entrada=CAPTURE_MODE_LABEL,
-        selected_empresa=None,
-        selected_fazenda=None,
-        parsed_coordinates=captured,
-        uploaded_kml=None,
-        buffer_m=st.session_state.get("sb_buffer_m", st.session_state.get("buffer_m", 200)),
-    )
+def _reset_export_state():
+    st.session_state["export_result"] = None
+    st.session_state["last_export_error"] = None
+    st.session_state["export_in_progress"] = False
+    st.session_state["roi_ready_for_export"] = False
 
 
 def _store_query_results(
@@ -95,8 +79,9 @@ def _store_query_results(
     st.session_state["buffer_m"] = buffer_m
     st.session_state["cloud_pct"] = cloud_pct
     st.session_state["uploaded_kml_name"] = uploaded_kml.name if uploaded_kml else None
+    st.session_state["roi_ready_for_export"] = bool(roi_geojson)
 
-    filtro_aplicado = {
+    st.session_state["filtro_aplicado"] = {
         "modo_entrada": modo_entrada,
         "selected_empresa": selected_empresa,
         "selected_fazenda": selected_fazenda,
@@ -106,7 +91,6 @@ def _store_query_results(
         "buffer_m": buffer_m,
         "cloud_pct": cloud_pct,
     }
-    st.session_state["filtro_aplicado"] = filtro_aplicado
 
 
 def _run_query(
@@ -131,6 +115,12 @@ def _run_query(
         uploaded_kml,
         buffer_m,
     )
+
+    if query_gdf is None or getattr(query_gdf, "empty", True):
+        raise ValueError("Não foi possível gerar a geometria da consulta.")
+
+    if not roi_geojson:
+        raise ValueError("Não foi possível gerar a ROI da consulta.")
 
     _store_query_results(
         modo_entrada=modo_entrada,
@@ -166,37 +156,116 @@ def _run_query(
         st.session_state["selected_product_name"] = None
 
 
-def _maybe_refresh_capture_preview(gdf_full):
-    if st.session_state.get("sb_modo_entrada") != CAPTURE_MODE_LABEL:
-        return
+def _ensure_roi_ready_for_export(
+    gdf_full,
+    modo_entrada,
+    selected_empresa,
+    selected_fazenda,
+    parsed_coordinates,
+    uploaded_kml,
+    buffer_m,
+):
+    """
+    Garante que query_gdf e roi_geojson existam antes da exportação.
+    No modo Capturar Coordenada, a ROI gerada a partir do ponto capturado
+    deve ser aceita normalmente como ROI válida para exportação.
+    """
+    roi_geojson = st.session_state.get("roi_geojson")
+    query_gdf = st.session_state.get("query_gdf")
 
-    captured = st.session_state.get("captured_coordinate")
-    if not captured:
-        return
+    if roi_geojson:
+        st.session_state["roi_ready_for_export"] = True
+        return query_gdf, roi_geojson
 
+    if modo_entrada == CAPTURE_MODE_LABEL:
+        parsed_coordinates = st.session_state.get("captured_coordinate")
+
+    if modo_entrada == CAPTURE_MODE_LABEL and not parsed_coordinates:
+        raise ValueError("Capture uma coordenada válida antes de exportar.")
+
+    query_gdf, roi_geojson = get_query_gdf_and_roi_geojson(
+        gdf_full,
+        modo_entrada,
+        selected_empresa,
+        selected_fazenda,
+        parsed_coordinates,
+        uploaded_kml,
+        buffer_m,
+    )
+
+    if query_gdf is None or getattr(query_gdf, "empty", True):
+        raise ValueError("Não foi possível gerar a geometria da consulta para exportação.")
+
+    if not roi_geojson:
+        raise ValueError("Não foi possível gerar a ROI para exportação.")
+
+    st.session_state["query_gdf"] = query_gdf
+    st.session_state["roi_geojson"] = roi_geojson
+    st.session_state["roi_ready_for_export"] = True
+
+    return query_gdf, roi_geojson
+
+
+def _handle_export(
+    gdf_full,
+    modo_entrada,
+    selected_empresa,
+    selected_fazenda,
+    parsed_coordinates,
+    uploaded_kml,
+    buffer_m,
+    export_filename: str,
+):
     try:
-        query_gdf, roi_geojson = get_query_gdf_and_roi_geojson(
-            gdf_full,
-            CAPTURE_MODE_LABEL,
-            None,
-            None,
-            captured,
-            None,
-            st.session_state.get("sb_buffer_m", st.session_state.get("buffer_m", 200)),
+        available_images_exp = st.session_state.get("available_images")
+        selected_scene_id_exp = st.session_state.get("selected_scene_id")
+        selected_product_name_exp = st.session_state.get("selected_product_name")
+
+        _, roi_geojson_exp = _ensure_roi_ready_for_export(
+            gdf_full=gdf_full,
+            modo_entrada=modo_entrada,
+            selected_empresa=selected_empresa,
+            selected_fazenda=selected_fazenda,
+            parsed_coordinates=parsed_coordinates,
+            uploaded_kml=uploaded_kml,
+            buffer_m=buffer_m,
         )
-        st.session_state["query_gdf"] = query_gdf
-        st.session_state["roi_geojson"] = roi_geojson
-    except Exception:
-        pass
+
+        if not available_images_exp:
+            raise ValueError("Sem imagens disponíveis.")
+        if not selected_scene_id_exp:
+            raise ValueError("Nenhuma imagem selecionada.")
+        if not selected_product_name_exp:
+            raise ValueError("Selecione o tipo de imagem.")
+        if not roi_geojson_exp:
+            raise ValueError("ROI não definida.")
+        if not export_filename:
+            export_filename = "exportacao_imagem"
+
+        st.session_state["export_in_progress"] = True
+        st.session_state["export_result"] = None
+        st.session_state["last_export_error"] = None
+
+        with st.spinner("Gerando arquivos em memória para download..."):
+            st.session_state["export_result"] = export_selected_image(
+                available_images=available_images_exp,
+                selected_scene_id=selected_scene_id_exp,
+                selected_product_name=selected_product_name_exp,
+                roi_geojson=roi_geojson_exp,
+                base_filename=export_filename,
+            )
+
+    except Exception as e:
+        st.session_state["export_result"] = None
+        st.session_state["last_export_error"] = f"Erro ao exportar: {e}"
+        st.error(st.session_state["last_export_error"])
+
+    finally:
+        st.session_state["export_in_progress"] = False
 
 
 def main():
     ensure_session_state()
-
-    if "export_result" not in st.session_state:
-        st.session_state["export_result"] = None
-    if "export_in_progress" not in st.session_state:
-        st.session_state["export_in_progress"] = False
 
     name = "Usuário"
     username = None
@@ -215,7 +284,6 @@ def main():
                     status="FAIL",
                 )
                 st.session_state["auth_login_logged_fail"] = True
-
             st.error("❌ Usuário ou senha incorretos.")
             st.stop()
 
@@ -257,13 +325,9 @@ def main():
         st.error("Erro ao carregar shapefile.")
         st.stop()
 
-    _maybe_refresh_capture_preview(gdf_full)
-
-    available_images_sidebar = st.session_state.get("available_images", [])
-
     sidebar_data = render_sidebar(
         gdf_full=gdf_full,
-        available_images=available_images_sidebar,
+        available_images=st.session_state.get("available_images", []),
     )
 
     modo_entrada = sidebar_data.get("modo_entrada")
@@ -275,13 +339,10 @@ def main():
     buffer_m = sidebar_data.get("buffer_m", 200)
     cloud_pct = sidebar_data.get("cloud_pct", 25)
     apply = sidebar_data.get("apply", False)
-
     parsed_coordinates = sidebar_data.get("parsed_coordinates")
     uploaded_kml = sidebar_data.get("uploaded_kml")
-
     selected_scene_id = sidebar_data.get("selected_scene_id")
     selected_product_name = sidebar_data.get("selected_product_name")
-
     export_filename = sidebar_data.get("export_filename", "").strip()
     export_requested = sidebar_data.get("export_requested", False)
 
@@ -296,6 +357,11 @@ def main():
 
     if apply:
         try:
+            if modo_entrada == CAPTURE_MODE_LABEL:
+                parsed_coordinates = st.session_state.get("captured_coordinate")
+
+            _reset_export_state()
+
             _run_query(
                 gdf_full=gdf_full,
                 modo_entrada=modo_entrada,
@@ -309,45 +375,24 @@ def main():
                 end_date=end_date,
                 cloud_pct=cloud_pct,
             )
+
+            st.rerun()
+
         except Exception as e:
             st.error(f"Erro ao aplicar consulta: {e}")
 
     if export_requested:
-        try:
-            available_images_exp = st.session_state.get("available_images")
-            selected_scene_id_exp = st.session_state.get("selected_scene_id")
-            selected_product_name_exp = st.session_state.get("selected_product_name")
-            roi_geojson_exp = st.session_state.get("roi_geojson")
-
-            if not available_images_exp:
-                raise ValueError("Sem imagens disponíveis")
-            if not selected_scene_id_exp:
-                raise ValueError("Nenhuma imagem selecionada")
-            if not selected_product_name_exp:
-                raise ValueError("Selecione o tipo de imagem")
-            if not roi_geojson_exp:
-                raise ValueError("ROI não definida")
-            if not export_filename:
-                export_filename = "exportacao_imagem"
-
-            st.session_state["export_in_progress"] = True
-            with st.spinner("Gerando arquivos em memória para download..."):
-                result = export_selected_image(
-                    available_images=available_images_exp,
-                    selected_scene_id=selected_scene_id_exp,
-                    selected_product_name=selected_product_name_exp,
-                    roi_geojson=roi_geojson_exp,
-                    base_filename=export_filename,
-                )
-
-            st.session_state["export_result"] = result
-            st.success("Exportação concluída.")
-
-        except Exception as e:
-            st.session_state["export_result"] = None
-            st.error(f"Erro ao exportar: {e}")
-        finally:
-            st.session_state["export_in_progress"] = False
+        _handle_export(
+            gdf_full=gdf_full,
+            modo_entrada=modo_entrada,
+            selected_empresa=selected_empresa,
+            selected_fazenda=selected_fazenda,
+            parsed_coordinates=parsed_coordinates,
+            uploaded_kml=uploaded_kml,
+            buffer_m=buffer_m,
+            export_filename=export_filename,
+        )
+        st.rerun()
 
     tab1, tab2, tab3 = st.tabs(["🗺️ Mapa", "ℹ️ Info", "🛰️ Dados Satélite"])
 
@@ -379,9 +424,6 @@ def main():
                 filtro_shape.get("selected_fazenda"),
             )
 
-        if modo_entrada == CAPTURE_MODE_LABEL and query_gdf is None:
-            query_gdf = gdf_full.copy()
-
         render_tab_mapa(
             gdf_full=gdf_full,
             gdf_filtered=gdf_filtered,
@@ -402,10 +444,22 @@ def main():
                 "selected_product_name": st.session_state.get("selected_product_name"),
                 "export_filename": export_filename,
                 "export_result": {
-                    "png_name": st.session_state.get("export_result", {}).get("png_name") if st.session_state.get("export_result") else None,
-                    "tif_name": st.session_state.get("export_result", {}).get("tif_name") if st.session_state.get("export_result") else None,
+                    "png_name": (
+                        st.session_state.get("export_result", {}).get("png_name")
+                        if st.session_state.get("export_result")
+                        else None
+                    ),
+                    "tif_name": (
+                        st.session_state.get("export_result", {}).get("tif_name")
+                        if st.session_state.get("export_result")
+                        else None
+                    ),
                 },
                 "captured_coordinate": st.session_state.get("captured_coordinate"),
+                "roi_geojson_ok": bool(st.session_state.get("roi_geojson")),
+                "roi_ready_for_export": st.session_state.get("roi_ready_for_export", False),
+                "export_in_progress": st.session_state.get("export_in_progress", False),
+                "last_export_error": st.session_state.get("last_export_error"),
             }
         )
 

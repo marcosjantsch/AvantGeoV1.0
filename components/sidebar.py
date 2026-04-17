@@ -3,7 +3,11 @@ from __future__ import annotations
 
 import streamlit as st
 
-from services.coordinate_service import CAPTURE_MODE_LABEL, format_dd
+from services.coordinate_service import (
+    CAPTURE_MODE_LABEL,
+    DEFAULT_CAPTURE_CITY_NAME,
+    format_dd,
+)
 from tabs.sidebar.entrada import render_sidebar_entrada
 from tabs.sidebar.exportar import render_sidebar_exportar
 from tabs.sidebar.imagens import render_sidebar_imagens
@@ -18,7 +22,7 @@ def _render_capture_summary():
 
     st.markdown("### Captura no mapa")
     st.caption(
-        "Abra a aba de mapa, mova o mouse para visualizar a posição atual e clique para definir ou substituir a coordenada."
+        "O mapa abre antes da consulta. O ponto inicia na coordenada padrão definida e pode ser reposicionado arrastando o marcador com o botão esquerdo do mouse. A consulta só muda quando você clicar em Aplicar consulta."
     )
 
     if hover and hover.get("latitude") is not None and hover.get("longitude") is not None:
@@ -27,13 +31,18 @@ def _render_capture_summary():
         )
 
     if captured:
-        st.success("Coordenada capturada no mapa.")
+        source = captured.get("source")
+        if source == "default_city_center":
+            st.info(f"Ponto inicial carregado em {DEFAULT_CAPTURE_CITY_NAME}.")
+        else:
+            st.success("Ponto atualmente definido no mapa.")
+
         st.markdown(f"**DD:** {format_dd(captured.get('latitude'))}, {format_dd(captured.get('longitude'))}")
         st.markdown(
-            f"**DMS:** {captured.get('latitude_dms', '-') } | {captured.get('longitude_dms', '-') }"
+            f"**DMS:** {captured.get('latitude_dms', '-')} | {captured.get('longitude_dms', '-')}"
         )
     else:
-        st.info("Nenhuma coordenada capturada ainda.")
+        st.info("Nenhum ponto disponível.")
 
 
 def render_sidebar(gdf_full, available_images=None):

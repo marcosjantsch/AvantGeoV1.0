@@ -6,8 +6,8 @@ from services.file_service import read_kml_or_kmz_to_gdf
 from services.geometry_service import (
     build_gdf_from_point_dd,
     build_gdf_from_point_utm,
-    gdf_to_roi_geojson,
     filter_gdf,
+    gdf_to_roi_geojson,
 )
 
 
@@ -39,9 +39,7 @@ def get_query_gdf_and_roi_geojson(
     if modo_entrada == "Empresa / Fazenda":
         query_gdf = filter_gdf(gdf_full, selected_empresa, selected_fazenda)
         if query_gdf is None or query_gdf.empty:
-            raise ValueError(
-                "Nenhuma geometria encontrada para a empresa/fazenda selecionada."
-            )
+            raise ValueError("Nenhuma geometria encontrada para a empresa/fazenda selecionada.")
 
         roi_geojson = gdf_to_roi_geojson(query_gdf, buffer_m=buffer_m)
         return query_gdf, roi_geojson
@@ -61,7 +59,6 @@ def get_query_gdf_and_roi_geojson(
                 raise ValueError("Latitude/Longitude inválidas.")
 
             query_gdf = build_gdf_from_point_dd(lat, lon)
-
         elif parsed_coordinates.get("coord_system") == "UTM":
             easting = parsed_coordinates.get("utm_easting")
             northing = parsed_coordinates.get("utm_northing")
@@ -85,7 +82,6 @@ def get_query_gdf_and_roi_geojson(
 
     if modo_entrada == "Arquivo KML/KMZ":
         query_gdf = read_kml_or_kmz_to_gdf(uploaded_kml)
-
         if query_gdf is None or query_gdf.empty:
             raise ValueError("Não foi possível obter geometria do KML/KMZ.")
 

@@ -1,8 +1,15 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from datetime import date
+
 import streamlit as st
 
-from services.coordinate_service import CAPTURE_MODE_LABEL, parse_coordinate_payload
+from services.coordinate_service import (
+    CAPTURE_MODE_LABEL,
+    DEFAULT_CAPTURE_CITY_NAME,
+    parse_coordinate_payload,
+)
 
 
 def safe_unique(gdf, col):
@@ -25,24 +32,6 @@ def render_sidebar_entrada(gdf_full):
             font-size: 0.88rem !important;
             margin-bottom: 0.10rem !important;
         }
-
-        div[data-testid="stMarkdownContainer"] p {
-            margin-bottom: 0.20rem !important;
-        }
-
-        div[data-testid="stVerticalBlock"] > div {
-            gap: 0.28rem !important;
-        }
-
-        div[data-testid="stFileUploader"] section {
-            padding-top: 0.35rem !important;
-            padding-bottom: 0.35rem !important;
-        }
-
-        button[kind="secondary"], button[kind="primary"] {
-            padding-top: 0.35rem !important;
-            padding-bottom: 0.35rem !important;
-        }
         </style>
         """,
         unsafe_allow_html=True,
@@ -55,11 +44,6 @@ def render_sidebar_entrada(gdf_full):
     coord_payload = {}
     parsed_coordinates = None
     uploaded_kml = None
-
-    apply = False
-    apply_filters = False
-    apply_coordinates = False
-    apply_kml = False
 
     hoje = date.today()
     data_inicial_padrao = date(2026, 1, 1)
@@ -182,7 +166,7 @@ def render_sidebar_entrada(gdf_full):
 
     elif modo_entrada == CAPTURE_MODE_LABEL:
         st.info(
-            "Use a aba de mapa para capturar a coordenada. O mapa pode ser aberto antes da consulta e o último clique substitui o ponto anterior."
+            f"Abra a aba de mapa. O ponto inicial será carregado em {DEFAULT_CAPTURE_CITY_NAME} e pode ser reposicionado no mapa. A consulta e a lista de imagens só mudam ao clicar em Aplicar consulta."
         )
         parsed_coordinates = st.session_state.get("captured_coordinate")
 
@@ -250,29 +234,11 @@ def render_sidebar_entrada(gdf_full):
     st.session_state["sb_buffer_m_mem"] = buffer_m
     st.session_state["sb_cloud_pct_mem"] = cloud_pct
 
-    if modo_entrada == "Empresa / Fazenda":
-        apply_filters = st.button(
-            "Aplicar consulta",
-            use_container_width=True,
-            key="sb_apply_filters",
-        )
-        apply = apply_filters
-
-    elif modo_entrada in ["Coordenada", CAPTURE_MODE_LABEL]:
-        apply_coordinates = st.button(
-            "Aplicar consulta",
-            use_container_width=True,
-            key="sb_apply_coordinates",
-        )
-        apply = apply_coordinates
-
-    elif modo_entrada == "Arquivo KML/KMZ":
-        apply_kml = st.button(
-            "Aplicar consulta",
-            use_container_width=True,
-            key="sb_apply_kml",
-        )
-        apply = apply_kml
+    apply = st.button(
+        "Aplicar consulta",
+        use_container_width=True,
+        key="sb_apply_any_mode",
+    )
 
     return {
         "modo_entrada": modo_entrada,
@@ -284,11 +250,11 @@ def render_sidebar_entrada(gdf_full):
         "buffer_m": buffer_m,
         "cloud_pct": cloud_pct,
         "apply": apply,
-        "apply_filters": apply_filters,
+        "apply_filters": apply,
         "coord_system": coord_system,
         "coordinate_values": coord_payload,
         "parsed_coordinates": parsed_coordinates,
-        "apply_coordinates": apply_coordinates,
+        "apply_coordinates": apply,
         "uploaded_kml": uploaded_kml,
-        "apply_kml": apply_kml,
+        "apply_kml": apply,
     }
