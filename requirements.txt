@@ -1,0 +1,15 @@
+streamlit
+pandas
+geopandas
+folium
+streamlit-folium
+shapely
+fiona
+pyproj
+earthengine-api
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+numpy
+requests
+streamlit-authenticator>=0.2.3
