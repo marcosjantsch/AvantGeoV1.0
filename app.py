@@ -93,6 +93,13 @@ def _store_query_results(
     }
 
 
+def _infer_default_product_name(imgs):
+    if not imgs:
+        return None
+    # fallback robusto para cloud/local
+    return "RGB"
+
+
 def _run_query(
     gdf_full,
     modo_entrada,
@@ -151,6 +158,10 @@ def _run_query(
         current_scene = st.session_state.get("selected_scene_id")
         if not current_scene or not any(img.get("id") == current_scene for img in imgs):
             st.session_state["selected_scene_id"] = imgs[0]["id"]
+
+        # fallback para Cloud Run/Coldroot: garantir tipo de imagem persistido
+        if not st.session_state.get("selected_product_name"):
+            st.session_state["selected_product_name"] = _infer_default_product_name(imgs)
     else:
         st.session_state["selected_scene_id"] = None
         st.session_state["selected_product_name"] = None
@@ -267,6 +278,17 @@ def _handle_export(
 def main():
     ensure_session_state()
 
+    # blindagem extra de estados críticos
+    st.session_state.setdefault("available_images", [])
+    st.session_state.setdefault("selected_scene_id", None)
+    st.session_state.setdefault("selected_product_name", None)
+    st.session_state.setdefault("query_gdf", None)
+    st.session_state.setdefault("roi_geojson", None)
+    st.session_state.setdefault("roi_ready_for_export", False)
+    st.session_state.setdefault("export_result", None)
+    st.session_state.setdefault("export_in_progress", False)
+    st.session_state.setdefault("last_export_error", None)
+
     name = "Usuário"
     username = None
     role = "Acesso local"
@@ -355,11 +377,21 @@ def main():
     if selected_product_name is not None:
         st.session_state["selected_product_name"] = selected_product_name
 
+    # fallback adicional para cenários cloud em que o produto some no rerun
+    if not st.session_state.get("selected_product_name") and st.session_state.get("selected_scene_id"):
+        imgs_mem = st.session_state.get("available_images", [])
+        if imgs_mem:
+            st.session_state["selected_product_name"] = _infer_default_product_name(imgs_mem)
+
+    # -----------------------------
+    # APLICAR CONSULTA
+    # -----------------------------
     if apply:
         try:
             if modo_entrada == CAPTURE_MODE_LABEL:
                 parsed_coordinates = st.session_state.get("captured_coordinate")
 
+            # ao aplicar novamente, invalida export anterior
             _reset_export_state()
 
             _run_query(
@@ -376,11 +408,23 @@ def main():
                 cloud_pct=cloud_pct,
             )
 
-            st.rerun()
+            # blindagem final: garantir persistência após a consulta
+            st.session_state["roi_ready_for_export"] = bool(st.session_state.get("roi_geojson"))
+            if not st.session_state.get("selected_product_name") and st.session_state.get("available_images"):
+                st.session_state["selected_product_name"] = _infer_default_product_name(
+                    st.session_state.get("available_images", [])
+                )
+
+            # IMPORTANTE:
+            # não usar st.rerun() aqui; o clique do botão já reroda o script
+            # e o rerun extra pode quebrar a persistência no Cloud Run
 
         except Exception as e:
             st.error(f"Erro ao aplicar consulta: {e}")
 
+    # -----------------------------
+    # EXPORTAR DOWNLOADS
+    # -----------------------------
     if export_requested:
         _handle_export(
             gdf_full=gdf_full,
@@ -443,6 +487,7 @@ def main():
                 "selected_scene_id": st.session_state.get("selected_scene_id"),
                 "selected_product_name": st.session_state.get("selected_product_name"),
                 "export_filename": export_filename,
+                "available_images_count": len(st.session_state.get("available_images", [])),
                 "export_result": {
                     "png_name": (
                         st.session_state.get("export_result", {}).get("png_name")
