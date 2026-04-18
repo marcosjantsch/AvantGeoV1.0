@@ -15,3 +15,35 @@
 2026-04-17T14:24:30.616689,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
 2026-04-17T14:24:50.742271,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
 2026-04-17T14:43:14.878616,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-17T15:56:51.706396,ERROR,auth_login_log,Falha no login,unknown,,unknown,FAIL
+2026-04-17T17:22:06.701914,ERROR,auth_login_log,Falha no login,unknown,,unknown,FAIL
+2026-04-17T17:22:45.589296,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-17T17:31:08.829827,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-17T18:34:05.690178,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-17T22:45:26.216130,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-17T22:47:13.845116,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-17T22:53:35.244287,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-17T22:59:00.998397,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-17T23:07:56.999765,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-17T23:12:01.463299,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-17T23:17:29.640418,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-17T23:26:17.412401,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-17T23:30:35.235352,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-17T23:39:28.814685,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-17T23:40:08.393418,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-18T00:33:35.157943,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-18T00:36:03.989043,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-18T00:47:15.077277,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-18T01:00:30.947628,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-18T01:03:10.499637,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-18T01:07:00.366023,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-18T01:12:01.360736,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-18T01:28:07.755529,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-18T01:56:20.569515,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-18T01:59:01.032544,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-18T01:59:25.648923,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-18T02:01:59.984499,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-18T02:06:41.880499,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-18T02:10:21.290860,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-18T02:13:16.070389,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
+2026-04-18T02:16:19.049839,INFO,auth_login_log,Login realizado,rafael,rafael,admin,SUCCESS
