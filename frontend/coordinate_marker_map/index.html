@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Coordinate Marker Map</title>
+    <link rel="stylesheet" href="./vendor/leaflet.css" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: sans-serif;
+        background: #020617;
+      }
+
+      #map {
+        width: 100%;
+        height: 100%;
+        outline: none;
+      }
+
+      .coordinate-pin {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 2px solid #ffffff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+      }
+
+      .coordinate-pin--blue {
+        background: #2563eb;
+      }
+
+      .coordinate-pin--red {
+        background: #dc2626;
+      }
+
+      .leaflet-container {
+        font: inherit;
+        background: #020617;
+      }
+
+      .leaflet-control-zoom a,
+      .leaflet-bar a {
+        background: #050b09 !important;
+        color: #d1fae5 !important;
+        border: 1px solid rgba(52, 211, 153, 0.35) !important;
+      }
+
+      .leaflet-control-zoom a:hover,
+      .leaflet-bar a:hover {
+        background: #0b1f17 !important;
+        color: #a7f3d0 !important;
+      }
+
+      .leaflet-control-attribution {
+        background: rgba(2, 6, 23, 0.88) !important;
+        color: #86efac !important;
+      }
+
+      .leaflet-control-attribution a {
+        color: #6ee7b7 !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map" tabindex="0"></div>
+
+    <script src="./vendor/leaflet.js"></script>
+    <script src="./vendor/streamlit-bridge.js"></script>
+    <script>
+      const Streamlit = window.Streamlit;
+
+      let map;
+      let marker;
+      let ctrlPressed = false;
+      let hasDraggedSinceActivation = false;
+      let activeDragInteraction = false;
+      let lastHeight = null;
+      let lastSentSignature = null;
+      let mapInitialized = false;
+      let baseLayers = {};
+
+      function buildIcon(colorClass) {
+        return L.divIcon({
+          className: "",
+          html: `<div class="coordinate-pin ${colorClass}"></div>`,
+          iconSize: [18, 18],
+          iconAnchor: [9, 9],
+        });
+      }
+
+      const blueIcon = buildIcon("coordinate-pin--blue");
+      const redIcon = buildIcon("coordinate-pin--red");
+
+      function setMarkerState(active) {
+        if (!marker) {
+          return;
+        }
+
+        marker.setIcon(active ? redIcon : blueIcon);
+        if (active) {
+          marker.dragging.enable();
+        } else {
+          marker.dragging.disable();
+        }
+      }
+
+      function sendPosition(source) {
+        if (!marker) {
+          return;
+        }
+
+        const pos = marker.getLatLng();
+        const signature = `${Number(pos.lat.toFixed(6))},${Number(pos.lng.toFixed(6))}`;
+        if (lastSentSignature === signature) {
+          hasDraggedSinceActivation = false;
+          activeDragInteraction = false;
+          return;
+        }
+
+        lastSentSignature = signature;
+        hasDraggedSinceActivation = false;
+        activeDragInteraction = false;
+        Streamlit.setComponentValue({
+          latitude: Number(pos.lat.toFixed(6)),
+          longitude: Number(pos.lng.toFixed(6)),
+          source,
+        });
+      }
+
+      function handleKeyDown(event) {
+        if (event.key !== "Control" || ctrlPressed || !marker) {
+          return;
+        }
+
+        ctrlPressed = true;
+        hasDraggedSinceActivation = false;
+        activeDragInteraction = true;
+        setMarkerState(true);
+      }
+
+      function handleKeyUp(event) {
+        if (event.key !== "Control" || !ctrlPressed || !marker) {
+          return;
+        }
+
+        ctrlPressed = false;
+        setMarkerState(false);
+
+        if (hasDraggedSinceActivation) {
+          sendPosition("ctrl_release");
+        } else {
+          activeDragInteraction = false;
+        }
+      }
+
+      function initializeMap(args) {
+        const mapNode = document.getElementById("map");
+        mapNode.style.height = `${args.height}px`;
+        lastHeight = args.height;
+
+        map = L.map(mapNode, {
+          zoomControl: true,
+          attributionControl: true,
+        }).setView([args.latitude, args.longitude], args.zoom);
+
+        baseLayers["Esri World Imagery"] = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+          maxZoom: 19,
+          attribution: "Tiles &copy; Esri",
+        }).addTo(map);
+        baseLayers["OpenStreetMap"] = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 19,
+          attribution: "&copy; OpenStreetMap contributors",
+        });
+        baseLayers["CartoDB Voyager"] = L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+          maxZoom: 19,
+          attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
+        });
+        baseLayers["CartoDB DarkMatter"] = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+          maxZoom: 19,
+          attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
+        });
+        baseLayers["Esri World Topo"] = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}", {
+          maxZoom: 19,
+          attribution: "Tiles &copy; Esri",
+        });
+        L.control.layers(baseLayers, null, { collapsed: false }).addTo(map);
+
+        marker = L.marker([args.latitude, args.longitude], {
+          draggable: false,
+          icon: blueIcon,
+          autoPan: true,
+        }).addTo(map);
+
+        marker.on("dragstart", function () {
+          hasDraggedSinceActivation = false;
+          activeDragInteraction = true;
+        });
+
+        marker.on("drag", function () {
+          hasDraggedSinceActivation = true;
+        });
+
+        marker.on("dragend", function () {
+          setMarkerState(false);
+          ctrlPressed = false;
+          sendPosition("dragend");
+        });
+
+        mapNode.addEventListener("click", function () {
+          mapNode.focus();
+        });
+
+        document.addEventListener("keydown", handleKeyDown);
+        document.addEventListener("keyup", handleKeyUp);
+        mapInitialized = true;
+        Streamlit.setFrameHeight(args.height + 8);
+      }
+
+      function syncFromArgs(args) {
+        if (!map || !marker || !mapInitialized) {
+          initializeMap(args);
+          return;
+        }
+
+        const mapNode = document.getElementById("map");
+        if (lastHeight !== args.height) {
+          mapNode.style.height = `${args.height}px`;
+          lastHeight = args.height;
+          map.invalidateSize(false);
+          Streamlit.setFrameHeight(args.height + 8);
+        }
+
+        if (!activeDragInteraction) {
+          const current = marker.getLatLng();
+          const latChanged = Math.abs(current.lat - args.latitude) > 0.000001;
+          const lonChanged = Math.abs(current.lng - args.longitude) > 0.000001;
+
+          if (latChanged || lonChanged) {
+            marker.setLatLng([args.latitude, args.longitude]);
+            map.setView([args.latitude, args.longitude], args.zoom, { animate: false });
+          }
+        }
+      }
+
+      function onRender(event) {
+        const args = event.detail.args;
+        syncFromArgs(args);
+      }
+
+      Streamlit.events.addEventListener(Streamlit.RENDER_EVENT, onRender);
+      Streamlit.setComponentReady();
+    </script>
+  </body>
+</html>
