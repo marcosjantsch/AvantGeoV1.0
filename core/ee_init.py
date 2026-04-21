@@ -6,21 +6,12 @@ from typing import List, Tuple
 import ee
 import streamlit as st
 
-from core.settings import ASSET_FAZENDAS, EE_PROJECT
-
-
-def _extract_asset_project(asset_path: str) -> str | None:
-    prefix = "projects/"
-    if not asset_path.startswith(prefix):
-        return None
-    remainder = asset_path[len(prefix):]
-    project = remainder.split("/", 1)[0].strip()
-    return project or None
+from core.settings import EE_PROJECT
 
 
 def _project_candidates() -> List[str]:
     candidates: List[str] = []
-    for candidate in [EE_PROJECT, _extract_asset_project(ASSET_FAZENDAS)]:
+    for candidate in [EE_PROJECT]:
         if candidate and candidate not in candidates:
             candidates.append(candidate)
     return candidates
@@ -37,6 +28,7 @@ def _initialize_with_project(project_id: str) -> Tuple[bool, str]:
 @st.cache_resource
 def init_ee() -> Tuple[bool, str]:
     attempted_projects: List[str] = []
+    configured_project = EE_PROJECT
 
     for project_id in _project_candidates():
         ok, result = _initialize_with_project(project_id)
@@ -50,6 +42,19 @@ def init_ee() -> Tuple[bool, str]:
     except Exception as exc:
         msg = str(exc)
 
+        if "no project found" in msg or "Call with project=" in msg:
+            configured_text = configured_project or "nenhum projeto configurado"
+            attempted_text = " | ".join(attempted_projects) if attempted_projects else "sem tentativas com projeto explicito"
+            return (
+                False,
+                "Falha ao inicializar o Earth Engine: nenhum projeto GCP utilizavel foi encontrado para estas credenciais. "
+                f"Projeto configurado: {configured_text}. "
+                "No ambiente online, defina EE_PROJECT ou GOOGLE_CLOUD_PROJECT para um projeto em que a conta tenha "
+                "a permissao serviceusage.services.use (por exemplo, roles/serviceusage.serviceUsageConsumer) "
+                "e em que a Earth Engine API esteja habilitada. "
+                f"Tentativas: {attempted_text}",
+            )
+
         if "not registered to use Earth Engine" in msg:
             return (
                 False,
@@ -62,6 +67,16 @@ def init_ee() -> Tuple[bool, str]:
                 False,
                 "A Earth Engine API nao esta ativada no projeto configurado. "
                 "Ative a API no projeto GCP que sera usado pelo app.",
+            )
+
+        if "serviceusage.services.use" in msg or "does not have required permission to use project" in msg:
+            attempted_text = " | ".join(attempted_projects) if attempted_projects else "sem projetos explicitos"
+            return (
+                False,
+                "As credenciais atuais nao tem permissao para usar o projeto GCP configurado no Earth Engine. "
+                "No ambiente online, configure EE_PROJECT ou GOOGLE_CLOUD_PROJECT para um projeto acessivel por essa conta "
+                "e conceda a permissao roles/serviceusage.serviceUsageConsumer, mantendo tambem a Earth Engine API habilitada. "
+                f"Tentativas: {attempted_text}",
             )
 
         attempted_text = " | ".join(attempted_projects) if attempted_projects else "sem projetos explicitos"
